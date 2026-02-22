@@ -28,5 +28,5 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: assimapp/dist/assimapp
+          folder: assimapp/dist/assimapp/browser
           branch: gh-pages
