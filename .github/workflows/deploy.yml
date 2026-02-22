@@ -22,7 +22,7 @@ jobs:
       - name: Install and Build
         run: |
           cd assimapp
-          npm install
+          npm ci
           npx ng build --configuration production --base-href /
 
       - name: Deploy 🚀
