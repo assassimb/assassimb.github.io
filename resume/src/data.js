@@ -7,7 +7,7 @@
 export const RESUME = {
   person: {
     name: "Assim Bousselsal",
-    title: { fr: "Stagiaire en génie informatique", en: "Computer engineering intern" },
+    title: { fr: "Développeur full-stack", en: "Full-stack developer" },
     initials: "AB",
     email: "assassimb@gmail.com",
     location: { fr: "Sherbrooke, Canada", en: "Sherbrooke, Canada" },
@@ -55,6 +55,104 @@ export const RESUME = {
   ],
 
   experience: [
+    {
+      id: "omnimed",
+      org: "Omnimed",
+      orgInitial: "O",
+      role: { fr: "Développeur full-stack", en: "Full-stack developer" },
+      period: { fr: "01/2024 – Présent", en: "01/2024 – Present" },
+      location: { fr: "Cookshire-Eaton, Canada — Hybride", en: "Cookshire-Eaton, Canada — Hybrid" },
+      type: { fr: "Emploi", en: "Employment" },
+      summary: {
+        fr: "Écosystème de facturation et de paiement d'un dossier médical électronique (DME) : terminaux PAX, paiements en ligne et refonte du modèle de prépaiement.",
+        en: "Billing and payment ecosystem of an electronic medical record (EMR): PAX terminals, online payments and a redesigned prepayment model."
+      },
+      stack: ["Java", "Spring Boot", "Angular", "Nuvei / SafeCharge", "Terminaux PAX", "Feature flags", "Tests unitaires & e2e"],
+      overview: {
+        fr: "Au sein de l'équipe facturation d'Omnimed, j'ai travaillé sur l'écosystème de paiement d'un dossier médical électronique utilisé par des cliniques. Le travail couvre toute la chaîne — du back-end Java/Spring au front-end Angular — pour permettre aux cliniques d'encaisser de façon fiable et conforme, tout en faisant évoluer une logique de facturation héritée sans interrompre le service.",
+        en: "Within Omnimed's billing team, I worked on the payment ecosystem of an electronic medical record used by clinics. The work spans the full chain — from the Java/Spring back-end to the Angular front-end — to let clinics collect payments reliably and compliantly, while evolving legacy billing logic without disrupting service."
+      },
+      responsibilities: {
+        fr: [
+          "Intégrer les terminaux de paiement PAX à la plateforme web d'Omnimed pour permettre la création de paiements sans fil directement dans l'application.",
+          "Automatiser le retour des données de transaction du terminal vers le système.",
+          "Développer et intégrer les paiements en ligne SafeCharge (Nuvei), avec des champs de carte conformes PCI via iframe et la gestion des codes d'erreur de la passerelle.",
+          "Mettre en place des architectures à feature flags pour déployer progressivement les fonctionnalités à des clients ciblés.",
+          "Contribuer à la refonte de l'écosystème de facturation en implémentant un modèle de prépaiement par lots (services prépayés consommés sur de futures factures).",
+          "Travailler sur les bases de code back-end Java/Spring et front-end Angular : ajout de fonctionnalités et refactorisation de la logique de facturation héritée.",
+          "Stabiliser les suites de tests unitaires et de bout en bout.",
+          "Collaborer avec Nuvei pour intégrer les cliniques, communiquer les changements techniques et assurer une adoption sans heurts du nouveau flux."
+        ],
+        en: [
+          "Integrated PAX payment terminals into the Omnimed web platform to enable wireless, in-app payment creation.",
+          "Automated the return of terminal transaction data back into the system.",
+          "Developed and integrated SafeCharge (Nuvei) online payments, with PCI-compliant card fields via iframe and gateway error-code handling.",
+          "Implemented feature-flag architectures to progressively roll out functionality to selected clients.",
+          "Contributed to the redesign of the billing ecosystem with a bundle prepayment model (prepaid services consumed across future invoices).",
+          "Worked across the Java/Spring back-end and Angular front-end: adding features and refactoring legacy billing logic.",
+          "Stabilized the unit and end-to-end test suites.",
+          "Collaborated with Nuvei to onboard clinics, communicate technical changes and ensure seamless adoption of the new workflow."
+        ]
+      },
+      impact: {
+        fr: [
+          "Paiement sans fil en cliniques rendu possible directement dans le DME via les terminaux PAX.",
+          "Paiements en ligne conformes PCI livrés avec une gestion robuste des erreurs de passerelle.",
+          "Déploiements progressifs maîtrisés grâce aux feature flags, limitant les risques pour les clients."
+        ],
+        en: [
+          "Enabled wireless in-clinic payments directly inside the EMR through PAX terminals.",
+          "Delivered PCI-compliant online payments with robust gateway-error handling.",
+          "Controlled, progressive rollouts via feature flags, limiting risk for clients."
+        ]
+      }
+    },
+    {
+      id: "goto",
+      org: "GoTo",
+      orgInitial: "G",
+      role: { fr: "Développeur full-stack", en: "Full-stack developer" },
+      period: "07/2022 – 08/2023",
+      location: { fr: "Québec, Canada — Télétravail", en: "Québec, Canada — Remote" },
+      type: { fr: "Stage", en: "Internship" },
+      summary: {
+        fr: "Interfaces React et solutions infonuagiques au sein d'une architecture microservices sur AWS, avec une forte culture de tests.",
+        en: "React interfaces and cloud solutions within a microservices architecture on AWS, with a strong testing culture."
+      },
+      stack: ["React", "Jest", "Robot Framework", "Microservices", "AWS", "JIRA"],
+      overview: {
+        fr: "Chez GoTo, entreprise technologique au rythme soutenu, je me suis spécialisé dans le développement d'interfaces conviviales en React. Le rôle demandait de s'intégrer rapidement à une architecture microservices déployée sur AWS et de soutenir une culture de qualité forte, où chaque fonctionnalité était couverte par des tests unitaires et de bout en bout.",
+        en: "At GoTo, a fast-paced tech company, I specialized in building user-friendly interfaces in React. The role meant quickly fitting into a microservices architecture deployed on AWS and upholding a strong quality culture, where every feature was covered by unit and end-to-end tests."
+      },
+      responsibilities: {
+        fr: [
+          "Développer des interfaces utilisateur conviviales avec React.",
+          "Assurer la qualité du code avec des tests unitaires et de bout en bout (Jest et Robot Framework).",
+          "Gérer les tâches tout au long du cycle de vie des sprints avec JIRA.",
+          "S'intégrer rapidement à une architecture microservices et aux flux de travail dans un environnement AWS.",
+          "Contribuer au développement de solutions évolutives et efficaces dans un contexte technologique rapide."
+        ],
+        en: [
+          "Built user-friendly interfaces with React.",
+          "Ensured code quality with unit and end-to-end tests (Jest and Robot Framework).",
+          "Managed tasks throughout the sprint lifecycle with JIRA.",
+          "Quickly adapted to a microservices architecture and workflows in an AWS environment.",
+          "Contributed to building scalable, efficient solutions in a fast-paced, tech-driven setting."
+        ]
+      },
+      impact: {
+        fr: [
+          "Fonctionnalités React livrées avec une couverture de tests unitaires et de bout en bout.",
+          "Adaptation rapide à une architecture microservices sur AWS.",
+          "Contribution à des solutions évolutives dans un environnement à cadence élevée."
+        ],
+        en: [
+          "React features delivered with unit and end-to-end test coverage.",
+          "Fast ramp-up on a microservices architecture running on AWS.",
+          "Contributed to scalable solutions in a high-cadence environment."
+        ]
+      }
+    },
     {
       id: "decathlon",
       org: "Décathlon Canada",
@@ -385,8 +483,8 @@ export const RESUME = {
   ],
 
   knowledge: {
-    languages: ["C", "C#", "SQL", "Python", "MATLAB", "Octave", "FPGA", "UML", "PHP", "Smarty", "React", "VueJS"],
-    tools: ["GIT", "pgAdmin4", "phpMyAdmin", "Xilinx", "Altium", "SOLIDWORKS", "AutoCAD", "Linux", "Visual Studio", "ArduinoX", "Office 365", "Docker", "IntelliJ", "VS Code"]
+    languages: ["Java", "C", "C#", "SQL", "Python", "MATLAB", "Octave", "FPGA", "UML", "PHP", "Smarty", "Angular", "React", "VueJS"],
+    tools: ["GIT", "Spring Boot", "AWS", "Jest", "JIRA", "pgAdmin4", "phpMyAdmin", "Xilinx", "Altium", "SOLIDWORKS", "AutoCAD", "Linux", "Visual Studio", "ArduinoX", "Office 365", "Docker", "IntelliJ", "VS Code"]
   },
 
   skills: [

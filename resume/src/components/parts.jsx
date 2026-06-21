@@ -41,7 +41,7 @@ export function EntryCard({ entry, lang, kind, index, onOpen, reveal }) {
           <div className="entry-orgline">
             <span className="entry-org">{entry.org}</span>
             <span className="entry-dot">·</span>
-            <span className="entry-period">{entry.period}</span>
+            <span className="entry-period">{tc(entry.period, lang)}</span>
           </div>
         </div>
         <span className={"entry-type type-" + (kind === "university" ? "proj" : "work")}>
@@ -98,7 +98,7 @@ export function DetailPanel({ entry, lang, kind, onClose, onPrev, onNext, hasPre
               <h2 className="panel-role">{tc(entry.role, lang)}</h2>
               <div className="panel-meta">
                 <span><ConsoleIcon name="business" />{entry.org}</span>
-                <span><ConsoleIcon name="calendar_month" />{entry.period}</span>
+                <span><ConsoleIcon name="calendar_month" />{tc(entry.period, lang)}</span>
                 <span><ConsoleIcon name="location_on" />{tc(entry.location, lang)}</span>
               </div>
             </div>

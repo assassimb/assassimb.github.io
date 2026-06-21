@@ -67,7 +67,6 @@ function Hero({ lang }) {
         </div>
         <div className="hero-right">
           <Avatar text={p.initials} size={132} src="/me.png" alt={p.name} />
-          <div className="status"><span className="status-dot"></span>{lang === "fr" ? "disponible pour stage" : "available for internship"}</div>
         </div>
       </div>
     </section>
