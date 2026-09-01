@@ -1,0 +1,266 @@
+/* =====================================================================
+   print.css: the PDF surface.
+
+   Two rules govern everything here:
+
+   1. Accents are BORDERS, never backgrounds. Browsers strip background
+      colours when printing unless the user ticks "Background graphics";
+      border colours are always honoured. So the design never depends on a
+      fill it might not get.
+
+   2. The site accent #5cf2c4 is a bright mint tuned for a #080b12 ground.
+      On white it is effectively invisible. Print uses --pdoc-accent, the
+      same hue darkened to hold contrast on paper.
+
+   Screen preview: set data-resume-preview="on" on <body> to render the
+   document on-screen at true page width for tuning.
+   ===================================================================== */
+
+:root {
+  --pdoc-accent: #0e9b76;   /* #5cf2c4, darkened for white paper */
+  --pdoc-ink:    #16191f;
+  --pdoc-ink-2:  #3d4552;
+  --pdoc-ink-3:  #6b7482;
+  --pdoc-rule:   #d8dde4;
+
+  /* Single knob for global tuning; every size below derives from it. */
+  --pdoc-base:   8.3pt;
+  --pdoc-lh:     1.29;
+}
+
+/* Hidden on screen; this document exists for print only. */
+.pdoc { display: none; }
+
+/* ---------------------------------------------------------------- page */
+
+@page {
+  size: Letter;
+  margin: 11mm 12mm;
+}
+
+/* ------------------------------------------------------------ document */
+
+.pdoc {
+  color: var(--pdoc-ink);
+  background: #fff;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: var(--pdoc-base);
+  line-height: var(--pdoc-lh);
+  text-align: left;
+}
+
+.pdoc a { color: inherit; text-decoration: none; }
+
+/* ---- masthead ---- */
+
+.pdoc-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12mm;
+  padding-bottom: 2.2mm;
+  border-bottom: 1.4pt solid var(--pdoc-accent);
+}
+
+.pdoc-name {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: calc(var(--pdoc-base) * 2.45);
+  font-weight: 700;
+  letter-spacing: -0.6pt;
+  line-height: 1;
+  margin: 0;
+}
+
+.pdoc-title {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(var(--pdoc-base) * 0.94);
+  color: var(--pdoc-accent);
+  margin-top: 1.2mm;
+  letter-spacing: 0.1pt;
+}
+
+.pdoc-contact {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(var(--pdoc-base) * 0.9);
+  color: var(--pdoc-ink-2);
+  text-align: right;
+  white-space: nowrap;
+}
+.pdoc-contact > * { display: block; }
+.pdoc-contact > * + * { margin-top: 0.9mm; }
+
+.pdoc-tagline {
+  margin: 2.4mm 0 0;
+  font-size: calc(var(--pdoc-base) * 1.0);
+  color: var(--pdoc-ink-2);
+  max-width: 165mm;
+}
+
+/* ---- sections ---- */
+
+.psec { margin-top: 3.4mm; }
+
+.psec-title {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(var(--pdoc-base) * 0.84);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.9pt;
+  color: var(--pdoc-accent);
+  margin: 0 0 1.4mm;
+  padding-bottom: 1mm;
+  border-bottom: 0.5pt solid var(--pdoc-rule);
+}
+
+/* ---- entries ---- */
+
+.pentry {
+  margin-bottom: 2.2mm;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.pentry:last-child { margin-bottom: 0; }
+
+.pentry-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6mm;
+}
+
+.pentry-role {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: calc(var(--pdoc-base) * 1.09);
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.pentry-sep { color: var(--pdoc-ink-3); font-weight: 400; }
+.pentry-org { font-weight: 500; }
+
+.pentry-period {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(var(--pdoc-base) * 0.86);
+  color: var(--pdoc-ink-2);
+  white-space: nowrap;
+  flex: none;
+}
+
+
+.pentry-stack {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(var(--pdoc-base) * 0.84);
+  color: var(--pdoc-ink-2);
+  margin-top: 0.9mm;
+}
+
+/* Bullets use a border-left marker rather than a list glyph so the marker
+   colour survives print and the text still copy-pastes as a real list. */
+.pentry-bullets {
+  list-style: none;
+  margin: 1.2mm 0 0;
+  padding: 0;
+}
+.pentry-bullets li {
+  position: relative;
+  padding-left: 3.4mm;
+  margin-top: 0.7mm;
+  break-inside: avoid;
+}
+.pentry-bullets li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--pdoc-accent);
+  font-weight: 600;
+}
+
+.pentry-summary {
+  margin: 0.7mm 0 0;
+  color: var(--pdoc-ink-2);
+}
+
+/* Collapsed entries: present for continuity, deliberately silent. */
+.pentry-line { margin-bottom: 1.6mm; }
+.pentry-line .pentry-role { font-size: calc(var(--pdoc-base) * 1.0); font-weight: 500; }
+.pentry-line .pentry-summary { font-size: calc(var(--pdoc-base) * 0.92); }
+
+/* ---- education ---- */
+
+.pedu { list-style: none; margin: 0; padding: 0; }
+.pedu li { margin-top: 0.8mm; break-inside: avoid; }
+.pedu li:first-child { margin-top: 0; }
+.pedu-degree { font-weight: 600; }
+.pedu-sep { color: var(--pdoc-ink-3); }
+.pedu-school { color: var(--pdoc-ink-2); }
+.pedu-period {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(var(--pdoc-base) * 0.86);
+  color: var(--pdoc-ink-3);
+  margin-left: 2mm;
+}
+
+/* ---- knowledge groups ---- */
+
+.pgroup { margin: 0 0 1.1mm; break-inside: avoid; }
+.pgroup:last-child { margin-bottom: 0; }
+.pgroup-label {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(var(--pdoc-base) * 0.84);
+  font-weight: 600;
+  color: var(--pdoc-ink);
+  margin-right: 2mm;
+}
+.pgroup-label::after { content: ":"; }
+.pgroup-items { color: var(--pdoc-ink-2); }
+
+/* ---- optional sections (standard preset only) ---- */
+
+.ptraits { list-style: none; margin: 0; padding: 0; }
+.ptraits li { margin-top: 0.6mm; color: var(--pdoc-ink-2); }
+.ptraits strong { color: var(--pdoc-ink); font-weight: 600; }
+.pinline { margin: 0; color: var(--pdoc-ink-2); }
+
+/* ------------------------------------------------------- screen preview */
+
+body[data-resume-preview="on"] { background: #6b7280; }
+body[data-resume-preview="on"] .page,
+body[data-resume-preview="on"] .overlay { display: none !important; }
+body[data-resume-preview="on"] .pdoc {
+  display: block;
+  width: 216mm;                 /* Letter */
+  min-height: 279mm;
+  padding: 11mm 12mm;           /* mirrors @page margin */
+  margin: 8mm auto;
+  box-sizing: border-box;
+  box-shadow: 0 2mm 8mm rgba(0, 0, 0, 0.35);
+}
+
+/* --------------------------------------------------------------- print */
+
+@media print {
+  html, body {
+    background: #fff !important;
+    margin: 0 !important;
+  }
+
+  /* Every piece of site chrome, gone. */
+  .page,
+  .topbar,
+  .overlay,
+  .bg-grid,
+  .bg-glow,
+  .pdf-export,
+  .material-symbols-outlined {
+    display: none !important;
+  }
+
+  .pdoc { display: block; }
+
+  /* Widow and orphan control. A lone trailing line of a bullet on the next
+     page is the most common way a one-page résumé silently becomes two. */
+  p, li { orphans: 2; widows: 2; }
+  .psec { break-inside: auto; }
+  .psec-title { break-after: avoid; page-break-after: avoid; }
+}

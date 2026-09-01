@@ -1,19 +1,23 @@
 /* =====================================================================
-   Bilingual resume data — Assim Bousselsal
+   Bilingual resume data
    Every user-facing string is { fr, en }. FR is sourced from the resume;
    EN is translated. Detail-view prose (overview / highlights) is authored
    to enrich the original bullet points.
    ===================================================================== */
 export const RESUME = {
+  /* PRIVACY NOTE: this file is compiled into the public JS bundle and is
+     readable by anyone who opens devtools. Surname and home city are
+     deliberately withheld here rather than merely hidden by CSS, because
+     hiding is not removing. Keep it that way. */
   person: {
-    name: "Assim Bousselsal",
+    name: "Assim B.",
     title: { fr: "Développeur full-stack", en: "Full-stack developer" },
     initials: "AB",
     email: "assassimb@gmail.com",
-    location: { fr: "Sherbrooke, Canada", en: "Sherbrooke, Canada" },
+    location: { fr: "Québec, Canada", en: "Québec, Canada" },
     tagline: {
       fr: "Développeur full-stack et passionné d'intelligence artificielle, à l'aise du front-end au back-end comme du matériel embarqué.",
-      en: "Full-stack developer with a passion for artificial intelligence — equally at home from front-end to back-end and embedded hardware."
+      en: "Full-stack developer with a passion for artificial intelligence, equally at home from front-end to back-end and embedded hardware."
     }
   },
 
@@ -38,7 +42,12 @@ export const RESUME = {
     },
     langLabel: { fr: "FR", en: "EN" },
     languages: { fr: "Langages", en: "Languages" },
-    tools: { fr: "Outils logiciels", en: "Software tools" }
+    tools: { fr: "Outils logiciels", en: "Software tools" },
+    exportLabel: { fr: "PDF", en: "PDF" },
+    exportHint: {
+      fr: "Exporter un CV condensé d'une page : choisir « Enregistrer au format PDF » comme destination",
+      en: "Export a condensed one-page résumé: choose “Save as PDF” as the destination"
+    }
   },
 
   education: [
@@ -61,7 +70,7 @@ export const RESUME = {
       orgInitial: "O",
       role: { fr: "Développeur full-stack", en: "Full-stack developer" },
       period: { fr: "01/2024 – Présent", en: "01/2024 – Present" },
-      location: { fr: "Cookshire-Eaton, Canada — Hybride", en: "Cookshire-Eaton, Canada — Hybrid" },
+      location: { fr: "Québec, Canada (Hybride)", en: "Québec, Canada (Hybrid)" },
       type: { fr: "Emploi", en: "Employment" },
       summary: {
         fr: "Écosystème de facturation et de paiement d'un dossier médical électronique (DME) : terminaux PAX, paiements en ligne et refonte du modèle de prépaiement.",
@@ -69,8 +78,8 @@ export const RESUME = {
       },
       stack: ["Java", "Spring Boot", "Angular", "Nuvei / SafeCharge", "Terminaux PAX", "Feature flags", "Tests unitaires & e2e"],
       overview: {
-        fr: "Au sein de l'équipe facturation d'Omnimed, j'ai travaillé sur l'écosystème de paiement d'un dossier médical électronique utilisé par des cliniques. Le travail couvre toute la chaîne — du back-end Java/Spring au front-end Angular — pour permettre aux cliniques d'encaisser de façon fiable et conforme, tout en faisant évoluer une logique de facturation héritée sans interrompre le service.",
-        en: "Within Omnimed's billing team, I worked on the payment ecosystem of an electronic medical record used by clinics. The work spans the full chain — from the Java/Spring back-end to the Angular front-end — to let clinics collect payments reliably and compliantly, while evolving legacy billing logic without disrupting service."
+        fr: "Au sein de l'équipe facturation d'Omnimed, j'ai travaillé sur l'écosystème de paiement d'un dossier médical électronique utilisé par des cliniques. Le travail couvre toute la chaîne, du back-end Java/Spring au front-end Angular, pour permettre aux cliniques d'encaisser de façon fiable et conforme, tout en faisant évoluer une logique de facturation héritée sans interrompre le service.",
+        en: "Within Omnimed's billing team, I worked on the payment ecosystem of an electronic medical record used by clinics. The work spans the full chain, from the Java/Spring back-end to the Angular front-end, to let clinics collect payments reliably and compliantly, while evolving legacy billing logic without disrupting service."
       },
       responsibilities: {
         fr: [
@@ -113,7 +122,7 @@ export const RESUME = {
       orgInitial: "G",
       role: { fr: "Développeur full-stack", en: "Full-stack developer" },
       period: "07/2022 – 08/2023",
-      location: { fr: "Québec, Canada — Télétravail", en: "Québec, Canada — Remote" },
+      location: { fr: "Québec, Canada (Télétravail)", en: "Québec, Canada (Remote)" },
       type: { fr: "Stage", en: "Internship" },
       summary: {
         fr: "Interfaces React et solutions infonuagiques au sein d'une architecture microservices sur AWS, avec une forte culture de tests.",
@@ -159,7 +168,7 @@ export const RESUME = {
       orgInitial: "D",
       role: { fr: "Développeur web full stack et intelligence artificielle", en: "Full-stack web & artificial intelligence developer" },
       period: "01/2022 – 05/2022",
-      location: { fr: "Montréal, Canada", en: "Montréal, Canada" },
+      location: { fr: "Québec, Canada", en: "Québec, Canada" },
       type: { fr: "Stage", en: "Internship" },
       summary: {
         fr: "Application web de recommandation de tailles de vêtements à partir de deux photos, par vision par ordinateur.",
@@ -218,7 +227,7 @@ export const RESUME = {
       stack: ["PHP", "CodeIgniter", "SQL", "JavaScript", "Bulma", "phpMyAdmin", "Webhooks"],
       overview: {
         fr: "Pour une jeune start-up de livraison, j'ai ajouté des fonctionnalités web de bout en bout : de la base de données jusqu'à l'interface. Le travail demandait de respecter une architecture MVC propre et les standards visuels de la compagnie, tout en intégrant des paiements d'abonnement gérés par un tiers via des webhooks.",
-        en: "For a young delivery start-up, I added end-to-end web features — from the database to the interface. The work meant respecting a clean MVC architecture and the company's visual standards while integrating third-party subscription payments through webhooks."
+        en: "For a young delivery start-up, I added end-to-end web features, from the database to the interface. The work meant respecting a clean MVC architecture and the company's visual standards while integrating third-party subscription payments through webhooks."
       },
       responsibilities: {
         fr: [
@@ -257,10 +266,13 @@ export const RESUME = {
       id: "veo",
       org: "Université de Sherbrooke",
       orgInitial: "U",
-      role: { fr: "Développeur PHP — Projet Véo", en: "PHP developer — Véo project" },
+      role: { fr: "Développeur PHP (Projet Véo)", en: "PHP developer (Véo project)" },
       period: "08/2020 – 12/2020",
-      location: { fr: "Sherbrooke, Canada", en: "Sherbrooke, Canada" },
+      location: { fr: "Québec, Canada", en: "Québec, Canada" },
       type: { fr: "Stage", en: "Internship" },
+      /* This entry prints a single bullet under the one-page preset; pin the
+         one that describes the work rather than the toolchain. See condense.js. */
+      pinned: ["comportement natif de SuiteCRM", "Modified SuiteCRM's native behaviour"],
       summary: {
         fr: "Résolution d'irritants de navigation sur un progiciel CRM (SuiteCRM) pour l'administration des dossiers étudiants.",
         en: "Fixing navigation pain points on a CRM platform (SuiteCRM) for student-record administration."
@@ -268,7 +280,7 @@ export const RESUME = {
       stack: ["PHP", "Smarty", "SuiteCRM", "JavaScript", "CSS", "Docker", "GitLab", "JIRA"],
       overview: {
         fr: "Dans le cadre du projet Véo de l'Université de Sherbrooke, j'ai travaillé sur l'amélioration d'un progiciel CRM utilisé pour l'administration des dossiers étudiants. L'objectif était de réduire les irritants de navigation et d'adapter le comportement natif de SuiteCRM aux besoins réels du personnel, le tout en méthode agile avec suivi quotidien.",
-        en: "As part of Université de Sherbrooke's Véo project, I worked on improving a CRM platform used to administer student records. The goal was to reduce navigation pain points and adapt SuiteCRM's native behaviour to the staff's real needs — all in an agile workflow with daily follow-ups."
+        en: "As part of Université de Sherbrooke's Véo project, I worked on improving a CRM platform used to administer student records. The goal was to reduce navigation pain points and adapt SuiteCRM's native behaviour to the staff's real needs, all in an agile workflow with daily follow-ups."
       },
       responsibilities: {
         fr: [
@@ -307,7 +319,7 @@ export const RESUME = {
       orgInitial: "S",
       role: { fr: "Support technique Office 365", en: "Office 365 technical support" },
       period: "02/2019 – 08/2019",
-      location: { fr: "Sherbrooke, Canada", en: "Sherbrooke, Canada" },
+      location: { fr: "Québec, Canada", en: "Québec, Canada" },
       type: { fr: "Emploi", en: "Employment" },
       summary: {
         fr: "Assistance téléphonique bilingue et résolution de problèmes liés à la suite Office 365 et à la migration Cloud.",
@@ -347,11 +359,11 @@ export const RESUME = {
     },
     {
       id: "sykes",
-      org: "SYKES Sherbrooke",
+      org: "SYKES",
       orgInitial: "S",
       role: { fr: "Support technique de télécommunication mobile", en: "Mobile telecom technical support" },
       period: "2017 – 2018",
-      location: { fr: "Sherbrooke, Canada", en: "Sherbrooke, Canada" },
+      location: { fr: "Québec, Canada", en: "Québec, Canada" },
       type: { fr: "Emploi", en: "Employment" },
       summary: {
         fr: "Assistance téléphonique pour le service mobile Chatr : dépannage et configuration des données mobiles.",
@@ -360,7 +372,7 @@ export const RESUME = {
       stack: ["Dépannage", "Service client", "Réseaux mobiles", "Chatr"],
       overview: {
         fr: "Mon entrée dans le monde du support technique : j'assistais par téléphone les clients du service téléphonique Chatr. Le rôle consistait à diagnostiquer rapidement les problèmes de connexion et à guider les usagers, pas toujours techniques, vers une solution simple et fonctionnelle.",
-        en: "My entry into technical support: I assisted Chatr phone-service customers over the phone. The role meant quickly diagnosing connection problems and guiding users — not always technical — toward a simple, working solution."
+        en: "My entry into technical support: I assisted Chatr phone-service customers over the phone. The role meant quickly diagnosing connection problems and guiding users, not always technical, toward a simple, working solution."
       },
       responsibilities: {
         fr: [
@@ -451,7 +463,7 @@ export const RESUME = {
       stack: ["ArduinoX", "C", "Contrôle PID", "SOLIDWORKS", "Capteurs"],
       overview: {
         fr: "Projet mêlant logiciel, électronique et mécanique : une équipe de huit étudiants a conçu une automobile miniature capable de déneiger de façon autonome. Le robot lisait son environnement grâce à des capteurs de proximité et se déplaçait avec précision grâce à un contrôleur PID, le tout sur un châssis et une pelle modélisés en 3D.",
-        en: "A project blending software, electronics and mechanics: a team of eight students built a miniature car able to clear snow autonomously. The robot read its surroundings with proximity sensors and moved precisely thanks to a PID controller — all on a chassis and plow modeled in 3D."
+        en: "A project blending software, electronics and mechanics: a team of eight students built a miniature car able to clear snow autonomously. The robot read its surroundings with proximity sensors and moved precisely thanks to a PID controller, all on a chassis and plow modeled in 3D."
       },
       responsibilities: {
         fr: [
@@ -524,7 +536,7 @@ export const RESUME = {
     {
       icon: "piano",
       title: { fr: "Musique", en: "Music" },
-      body: { fr: "Jouer du piano est un de mes loisirs récents — un défi que je me suis donné en parallèle de mes apprentissages scolaires.", en: "Playing piano is a recent hobby — a challenge I set for myself alongside my studies." }
+      body: { fr: "Jouer du piano est un de mes loisirs récents, un défi que je me suis donné en parallèle de mes apprentissages scolaires.", en: "Playing piano is a recent hobby, a challenge I set for myself alongside my studies." }
     }
   ]
 };

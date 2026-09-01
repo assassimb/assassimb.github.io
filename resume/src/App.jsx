@@ -1,7 +1,10 @@
-/* Console-themed main composition — ported from console-main.jsx */
+/* Console-themed main composition, ported from console-main.jsx */
 import { useState, useEffect, useCallback } from "react";
 import { RESUME as RM } from "./data.js";
 import { tc, Token, ConsoleIcon, Avatar, EntryCard, DetailPanel } from "./components/parts.jsx";
+import PrintDoc from "./components/PrintDoc.jsx";
+import { countEvent } from "./lib/analytics.js";
+import "./styles/print.css";
 
 /* Appearance settings. In the Claude artifact these were live-editable via the
    in-canvas "Tweaks" panel (host-only chrome). For the standalone site they are
@@ -13,7 +16,36 @@ const TWEAKS = {
   glow: true,
 };
 
-function NavBar({ lang, setLang, onJump }) {
+/* PDF export.
+   window.print() against the print stylesheet, rather than a PDF library:
+   the output stays vector text (selectable, ATS-parseable, accents intact),
+   it costs zero dependencies, and it cannot rot. The trade is that the
+   browser owns the dialog: the user picks "Save as PDF" as the destination.
+
+   Browsers derive the suggested filename from document.title, so we swap it
+   for the duration of the print and restore it on afterprint. */
+function useExportPdf(lang) {
+  return useCallback(() => {
+    /* Counted before the dialog opens, because print() blocks synchronously in
+       most browsers. This records that an export happened and in which
+       language, nothing about who did it. */
+    countEvent(`pdf-export-${lang}`, `PDF export (${lang.toUpperCase()})`);
+
+    const original = document.title;
+    const slug = RM.person.name.replace(/\W+/g, "_").replace(/^_+|_+$/g, "");
+    document.title = `${slug}_CV_${lang.toUpperCase()}`;
+    const restore = () => {
+      document.title = original;
+      window.removeEventListener("afterprint", restore);
+    };
+    window.addEventListener("afterprint", restore);
+    window.print();
+    // Safari resolves print() asynchronously and may never fire afterprint.
+    setTimeout(restore, 1500);
+  }, [lang]);
+}
+
+function NavBar({ lang, setLang, onJump, onExport }) {
   const s = RM.ui.sections;
   const links = [
     ["experience", s.experience],
@@ -26,7 +58,7 @@ function NavBar({ lang, setLang, onJump }) {
       <div className="topbar-inner">
         <a className="brand" href="#top" onClick={(e) => { e.preventDefault(); onJump("top"); }}>
           <span className="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span className="brand-path">assim_bousselsal<span className="brand-ext">.cv</span></span>
+          <span className="brand-path">assim_b<span className="brand-ext">.cv</span></span>
         </a>
         <nav className="nav">
           {links.map(([id, label]) => (
@@ -40,6 +72,10 @@ function NavBar({ lang, setLang, onJump }) {
           <span className="lang-sep">/</span>
           <button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>en</button>
         </div>
+        <button className="pdf-export" onClick={onExport} title={tc(RM.ui.exportHint, lang)}>
+          <ConsoleIcon name="download" />
+          <span>{tc(RM.ui.exportLabel, lang)}</span>
+        </button>
       </div>
     </header>
   );
@@ -119,13 +155,15 @@ export default function App() {
   }, []);
 
   const s = RM.ui.sections;
+  const exportPdf = useExportPdf(lang);
 
   return (
+    <>
     <div className="page">
       <div className="bg-grid" aria-hidden="true"></div>
       <div className="bg-glow" aria-hidden="true"></div>
 
-      <NavBar lang={lang} setLang={setLang} onJump={jump} />
+      <NavBar lang={lang} setLang={setLang} onJump={jump} onExport={exportPdf} />
       <Hero lang={lang} />
 
       <main className="layout">
@@ -210,8 +248,8 @@ export default function App() {
       </main>
 
       <footer className="site-foot">
-        <span className="foot-path">assim_bousselsal.cv</span>
-        <span className="foot-end">{lang === "fr" ? "fin du dossier" : "end of file"} —</span>
+        <span className="foot-path">assim_b.cv</span>
+        <span className="foot-end">{lang === "fr" ? "fin du dossier" : "end of file"}</span>
       </footer>
 
       {current && (
@@ -224,5 +262,11 @@ export default function App() {
         />
       )}
     </div>
+
+    {/* Always mounted, hidden on screen. Kept a sibling of .page because
+        .page is display:none in print. Mounting unconditionally means the
+        browser's own Ctrl+P also produces the résumé, not just the button. */}
+    <PrintDoc lang={lang} resume={RM} />
+    </>
   );
 }

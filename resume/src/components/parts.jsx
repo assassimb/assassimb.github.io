@@ -1,4 +1,4 @@
-/* Console-themed resume components — ported from console-components.jsx */
+/* Console-themed resume components, ported from console-components.jsx */
 import { useEffect, useRef } from "react";
 import { RESUME as RC } from "../data.js";
 import { t as tc } from "../lib/i18n.js";
