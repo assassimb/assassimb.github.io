@@ -72,45 +72,63 @@ export const RESUME = {
       period: { fr: "01/2024 – Présent", en: "01/2024 – Present" },
       location: { fr: "Québec, Canada (Hybride)", en: "Québec, Canada (Hybrid)" },
       type: { fr: "Emploi", en: "Employment" },
+      /* One-page preset: always keep the Kafka bullet (most in-demand skill)
+         and the transaction-volume outcome. See `pinned` in condense.js. */
+      pinned: ["Kafka", "millions"],
       summary: {
-        fr: "Écosystème de facturation et de paiement d'un dossier médical électronique (DME) : terminaux PAX, paiements en ligne et refonte du modèle de prépaiement.",
-        en: "Billing and payment ecosystem of an electronic medical record (EMR): PAX terminals, online payments and a redesigned prepayment model."
+        fr: "Écosystème de facturation et de paiement d'un dossier médical électronique (DME) : événements Kafka, terminaux PAX, paiements en ligne et refonte du modèle de prépaiement.",
+        en: "Billing and payment ecosystem of an electronic medical record (EMR): Kafka events, PAX terminals, online payments and a redesigned prepayment model."
       },
-      stack: ["Java", "Spring Boot", "Angular", "Nuvei / SafeCharge", "Terminaux PAX", "Feature flags", "Tests unitaires & e2e"],
+      stack: [
+        "Java",
+        "Spring Boot",
+        "Kafka",
+        "Kubernetes",
+        "Angular",
+        { fr: "Terminaux PAX", en: "PAX terminals" },
+        "Feature flags",
+        { fr: "Tests unitaires & e2e", en: "Unit & e2e tests" }
+      ],
       overview: {
-        fr: "Au sein de l'équipe facturation d'Omnimed, j'ai travaillé sur l'écosystème de paiement d'un dossier médical électronique utilisé par des cliniques. Le travail couvre toute la chaîne, du back-end Java/Spring au front-end Angular, pour permettre aux cliniques d'encaisser de façon fiable et conforme, tout en faisant évoluer une logique de facturation héritée sans interrompre le service.",
-        en: "Within Omnimed's billing team, I worked on the payment ecosystem of an electronic medical record used by clinics. The work spans the full chain, from the Java/Spring back-end to the Angular front-end, to let clinics collect payments reliably and compliantly, while evolving legacy billing logic without disrupting service."
+        fr: "Au sein de l'équipe facturation d'Omnimed, j'ai travaillé sur l'écosystème de paiement d'un dossier médical électronique utilisé par des cliniques. Le travail couvre toute la chaîne, du back-end Java/Spring au front-end Angular, dans une architecture où les services communiquent par événements Kafka et sont déployés sur Kubernetes. L'objectif : permettre aux cliniques d'encaisser de façon fiable et conforme, tout en faisant évoluer une logique de facturation héritée sans interrompre le service.",
+        en: "Within Omnimed's billing team, I worked on the payment ecosystem of an electronic medical record used by clinics. The work spans the full chain, from the Java/Spring back-end to the Angular front-end, in an architecture where services communicate through Kafka events and are deployed on Kubernetes. The goal: let clinics collect payments reliably and compliantly, while evolving legacy billing logic without disrupting service."
       },
       responsibilities: {
         fr: [
           "Intégrer les terminaux de paiement PAX à la plateforme web d'Omnimed pour permettre la création de paiements sans fil directement dans l'application.",
           "Automatiser le retour des données de transaction du terminal vers le système.",
           "Développer et intégrer les paiements en ligne SafeCharge (Nuvei), avec des champs de carte conformes PCI via iframe et la gestion des codes d'erreur de la passerelle.",
+          "Publier et consommer des événements Kafka pour propager les données de transaction et synchroniser les services de facturation de façon asynchrone.",
           "Mettre en place des architectures à feature flags pour déployer progressivement les fonctionnalités à des clients ciblés.",
           "Contribuer à la refonte de l'écosystème de facturation en implémentant un modèle de prépaiement par lots (services prépayés consommés sur de futures factures).",
           "Travailler sur les bases de code back-end Java/Spring et front-end Angular : ajout de fonctionnalités et refactorisation de la logique de facturation héritée.",
           "Stabiliser les suites de tests unitaires et de bout en bout.",
-          "Collaborer avec Nuvei pour intégrer les cliniques, communiquer les changements techniques et assurer une adoption sans heurts du nouveau flux."
+          "Accélérer le développement et les revues de code avec des outils d'IA agentiques (Claude Code).",
+          "Piloter l'intégration des cliniques de bout en bout depuis la toute première clinique intégrée : configuration PAXSTORE, déploiements sur site, liaison avec Nuvei et documentation de support."
         ],
         en: [
           "Integrated PAX payment terminals into the Omnimed web platform to enable wireless, in-app payment creation.",
           "Automated the return of terminal transaction data back into the system.",
           "Developed and integrated SafeCharge (Nuvei) online payments, with PCI-compliant card fields via iframe and gateway error-code handling.",
+          "Published and consumed Kafka events to propagate transaction data and synchronize billing services asynchronously.",
           "Implemented feature-flag architectures to progressively roll out functionality to selected clients.",
           "Contributed to the redesign of the billing ecosystem with a bundle prepayment model (prepaid services consumed across future invoices).",
           "Worked across the Java/Spring back-end and Angular front-end: adding features and refactoring legacy billing logic.",
           "Stabilized the unit and end-to-end test suites.",
-          "Collaborated with Nuvei to onboard clinics, communicate technical changes and ensure seamless adoption of the new workflow."
+          "Accelerated development and code reviews with agentic AI tooling (Claude Code).",
+          "Drove clinic integrations end to end, starting with the very first clinic onboarded: PAXSTORE configuration, on-site deployments, Nuvei liaison and support documentation."
         ]
       },
       impact: {
         fr: [
-          "Paiement sans fil en cliniques rendu possible directement dans le DME via les terminaux PAX.",
+          "Paiement sans fil en cliniques rendu possible directement dans le DME via les terminaux PAX, avec des transactions totalisant plusieurs millions de dollars par année.",
+          "Impliqué depuis la toute première intégration de clinique : plus d'une douzaine de cliniques onboardées sur les terminaux, dont des déploiements multi-terminaux sur site.",
           "Paiements en ligne conformes PCI livrés avec une gestion robuste des erreurs de passerelle.",
           "Déploiements progressifs maîtrisés grâce aux feature flags, limitant les risques pour les clients."
         ],
         en: [
-          "Enabled wireless in-clinic payments directly inside the EMR through PAX terminals.",
+          "Enabled wireless in-clinic payments directly inside the EMR through PAX terminals, processing transactions adding up to millions of dollars a year.",
+          "Involved since the very first clinic integration: onboarded a dozen-plus clinics onto the terminals, including on-site multi-terminal deployments.",
           "Delivered PCI-compliant online payments with robust gateway-error handling.",
           "Controlled, progressive rollouts via feature flags, limiting risk for clients."
         ]
@@ -174,7 +192,7 @@ export const RESUME = {
         fr: "Application web de recommandation de tailles de vêtements à partir de deux photos, par vision par ordinateur.",
         en: "Web app that recommends clothing sizes from two photos using computer vision."
       },
-      stack: ["VueJS", "Python", "Vision par ordinateur", "Détection de pose", "REST API", "Node.js"],
+      stack: ["VueJS", "Python", { fr: "Vision par ordinateur", en: "Computer vision" }, { fr: "Détection de pose", en: "Pose detection" }, "REST API", "Node.js"],
       overview: {
         fr: "Au sein de l'équipe d'intelligence artificielle de Décathlon Canada, j'ai conçu une application web permettant de recommander la bonne taille de vêtement à un client à partir de deux simples photos. Le défi : transformer des images prises à la maison en mesures corporelles fiables, sans matériel spécialisé, tout en gardant une expérience client claire et rapide.",
         en: "Within Décathlon Canada's AI team, I built a web app that recommends the right clothing size to a customer from just two photos. The challenge: turn images taken at home into reliable body measurements with no specialized equipment, while keeping the customer experience clear and fast."
@@ -325,7 +343,7 @@ export const RESUME = {
         fr: "Assistance téléphonique bilingue et résolution de problèmes liés à la suite Office 365 et à la migration Cloud.",
         en: "Bilingual phone support and troubleshooting for the Office 365 suite and Cloud migration."
       },
-      stack: ["Office 365", "OneDrive", "SharePoint", "Migration Cloud", "Support bilingue"],
+      stack: ["Office 365", "OneDrive", "SharePoint", { fr: "Migration Cloud", en: "Cloud migration" }, { fr: "Support bilingue", en: "Bilingual support" }],
       overview: {
         fr: "Premier rôle en contact direct avec la clientèle d'affaires : j'ai offert une assistance téléphonique bilingue aux clients professionnels de Microsoft Office 365. Au-delà du dépannage, le rôle consistait à enseigner aux usagers comment tirer le meilleur des outils Cloud, et à accompagner les migrations de serveurs.",
         en: "My first role in direct contact with business clients: I provided bilingual phone support to professional Microsoft Office 365 customers. Beyond troubleshooting, the role meant teaching users how to get the most out of the Cloud tools and supporting server migrations."
@@ -369,7 +387,7 @@ export const RESUME = {
         fr: "Assistance téléphonique pour le service mobile Chatr : dépannage et configuration des données mobiles.",
         en: "Phone support for the Chatr mobile service: troubleshooting and mobile-data configuration."
       },
-      stack: ["Dépannage", "Service client", "Réseaux mobiles", "Chatr"],
+      stack: [{ fr: "Dépannage", en: "Troubleshooting" }, { fr: "Service client", en: "Customer service" }, { fr: "Réseaux mobiles", en: "Mobile networks" }, "Chatr"],
       overview: {
         fr: "Mon entrée dans le monde du support technique : j'assistais par téléphone les clients du service téléphonique Chatr. Le rôle consistait à diagnostiquer rapidement les problèmes de connexion et à guider les usagers, pas toujours techniques, vers une solution simple et fonctionnelle.",
         en: "My entry into technical support: I assisted Chatr phone-service customers over the phone. The role meant quickly diagnosing connection problems and guiding users, not always technical, toward a simple, working solution."
@@ -414,7 +432,7 @@ export const RESUME = {
         fr: "Jeu vidéo tour par tour manipulé par la voix humaine, avec détection de phonèmes et liaison à une carte FPGA.",
         en: "Turn-based video game controlled by the human voice, with phoneme detection and FPGA linkage."
       },
-      stack: ["C++", "QT", "FPGA", "Traitement du signal", "Détection de phonèmes"],
+      stack: ["C++", "QT", "FPGA", { fr: "Traitement du signal", en: "Signal processing" }, { fr: "Détection de phonèmes", en: "Phoneme detection" }],
       overview: {
         fr: "Avec une équipe de huit étudiants, nous avons conçu un jeu vidéo entièrement manipulé par la voix. Le cœur du projet était le traitement du signal : concevoir des filtres capables de distinguer des phonèmes prononcés par le joueur, puis traduire ces commandes vocales en actions dans un jeu tour par tour.",
         en: "With a team of eight students, we built a video game controlled entirely by voice. The heart of the project was signal processing: designing filters able to tell apart phonemes spoken by the player, then turning those voice commands into actions in a turn-based game."
@@ -460,7 +478,7 @@ export const RESUME = {
         fr: "Automobile miniature autonome de déneigement à capteurs de proximité, contrôle PID et pièces 3D conçues en SOLIDWORKS.",
         en: "Autonomous miniature snow-clearing car with proximity sensors, PID control and 3D parts designed in SOLIDWORKS."
       },
-      stack: ["ArduinoX", "C", "Contrôle PID", "SOLIDWORKS", "Capteurs"],
+      stack: ["ArduinoX", "C", { fr: "Contrôle PID", en: "PID control" }, "SOLIDWORKS", { fr: "Capteurs", en: "Sensors" }],
       overview: {
         fr: "Projet mêlant logiciel, électronique et mécanique : une équipe de huit étudiants a conçu une automobile miniature capable de déneiger de façon autonome. Le robot lisait son environnement grâce à des capteurs de proximité et se déplaçait avec précision grâce à un contrôleur PID, le tout sur un châssis et une pelle modélisés en 3D.",
         en: "A project blending software, electronics and mechanics: a team of eight students built a miniature car able to clear snow autonomously. The robot read its surroundings with proximity sensors and moved precisely thanks to a PID controller, all on a chassis and plow modeled in 3D."
@@ -496,7 +514,7 @@ export const RESUME = {
 
   knowledge: {
     languages: ["Java", "C", "C#", "SQL", "Python", "MATLAB", "Octave", "FPGA", "UML", "PHP", "Smarty", "Angular", "React", "VueJS"],
-    tools: ["GIT", "Spring Boot", "AWS", "Jest", "JIRA", "pgAdmin4", "phpMyAdmin", "Xilinx", "Altium", "SOLIDWORKS", "AutoCAD", "Linux", "Visual Studio", "ArduinoX", "Office 365", "Docker", "IntelliJ", "VS Code"]
+    tools: ["GIT", "Spring Boot", "Kafka", "Kubernetes", "Docker", "AWS", "Claude Code", "Jest", "JIRA", "pgAdmin4", "phpMyAdmin", "Xilinx", "Altium", "SOLIDWORKS", "AutoCAD", "Linux", "Visual Studio", "ArduinoX", "Office 365", "IntelliJ", "VS Code"]
   },
 
   skills: [

@@ -1,5 +1,7 @@
 /* =====================================================================
-   analytics.js: aggregate visit counting via GoatCounter.
+   tally.js: aggregate visit counting via GoatCounter.
+   (Named "tally", not "analytics": ad blockers block any module URL matching
+   *analytics*, which in dev kills the whole import graph and blanks the page.)
 
    WHAT THIS DOES NOT DO, deliberately: it does not store IP addresses, set
    cookies, fingerprint devices, or let you identify an individual visitor.

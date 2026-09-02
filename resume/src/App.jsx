@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { RESUME as RM } from "./data.js";
 import { tc, Token, ConsoleIcon, Avatar, EntryCard, DetailPanel } from "./components/parts.jsx";
 import PrintDoc from "./components/PrintDoc.jsx";
-import { countEvent } from "./lib/analytics.js";
+import { countEvent } from "./lib/tally.js";
 import "./styles/print.css";
 
 /* Appearance settings. In the Claude artifact these were live-editable via the

@@ -218,7 +218,7 @@ function score(text, stackBags, origin) {
 function buildBullets(entry, lang, n, preset) {
   if (n <= 0) return [];
 
-  const stackBags = (entry.stack || []).map(bag);
+  const stackBags = (entry.stack || []).map((s) => bag(pick(s, lang)));
 
   /* Author override. Scoring gets the common case right, but it cannot judge
      that "modified SuiteCRM's native behaviour" says more about the work than
@@ -295,7 +295,7 @@ function buildEntry(entry, lang, level, nBullets, stackCap, preset, homeLocation
     return out;
   }
 
-  out.stack = (entry.stack || []).slice(0, stackCap);
+  out.stack = (entry.stack || []).slice(0, stackCap).map((s) => pick(s, lang));
   out.bullets = buildBullets(entry, lang, nBullets, preset);
   if (!out.bullets.length) {
     out.summary = trimClause(pick(entry.summary, lang), preset.lineSummaryMax);

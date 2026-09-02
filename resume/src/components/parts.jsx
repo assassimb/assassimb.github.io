@@ -47,7 +47,7 @@ export function EntryCard({ entry, lang, kind, index, onOpen, reveal }) {
       <p className="entry-summary">{tc(entry.summary, lang)}</p>
       <div className="entry-foot">
         <div className="entry-stack">
-          {entry.stack.slice(0, 4).map((s, i) => <Token key={i}>{s}</Token>)}
+          {entry.stack.slice(0, 4).map((s, i) => <Token key={i}>{tc(s, lang)}</Token>)}
           {entry.stack.length > 4 && <span className="entry-more">+{entry.stack.length - 4}</span>}
         </div>
         <span className="entry-cta">
@@ -116,7 +116,7 @@ export function DetailPanel({ entry, lang, kind, onClose, onPrev, onNext, hasPre
           <section className="dblock">
             <h4 className="dlabel"># {tc(d.stack, lang)}</h4>
             <div className="dtokens">
-              {entry.stack.map((s, i) => <Token key={i}>{s}</Token>)}
+              {entry.stack.map((s, i) => <Token key={i}>{tc(s, lang)}</Token>)}
             </div>
           </section>
 
