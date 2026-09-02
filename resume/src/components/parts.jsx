@@ -5,14 +5,12 @@ import { t as tc } from "../lib/i18n.js";
 
 export { tc };
 
-const TOKEN_TONES = ["cyan", "violet", "amber", "pink", "green", "blue"];
-
-export function Token({ children, i = 0 }) {
-  return <span className={"tok tok-" + TOKEN_TONES[i % TOKEN_TONES.length]}>{children}</span>;
+export function Token({ children }) {
+  return <span className="tok">{children}</span>;
 }
 
 export function ConsoleIcon({ name, className = "" }) {
-  return <span className={"material-symbols-outlined " + className}>{name}</span>;
+  return <span className={"material-symbols-outlined " + className} aria-hidden="true">{name}</span>;
 }
 
 export function Avatar({ text, size = 56, glow = true, src, alt }) {
@@ -51,7 +49,7 @@ export function EntryCard({ entry, lang, kind, index, onOpen, reveal }) {
       <p className="entry-summary">{tc(entry.summary, lang)}</p>
       <div className="entry-foot">
         <div className="entry-stack">
-          {entry.stack.slice(0, 4).map((s, i) => <Token key={i} i={i}>{s}</Token>)}
+          {entry.stack.slice(0, 4).map((s, i) => <Token key={i}>{s}</Token>)}
           {entry.stack.length > 4 && <span className="entry-more">+{entry.stack.length - 4}</span>}
         </div>
         <span className="entry-cta">
@@ -121,7 +119,7 @@ export function DetailPanel({ entry, lang, kind, onClose, onPrev, onNext, hasPre
           <section className="dblock">
             <h4 className="dlabel"># {tc(d.stack, lang)}</h4>
             <div className="dtokens">
-              {entry.stack.map((s, i) => <Token key={i} i={i}>{s}</Token>)}
+              {entry.stack.map((s, i) => <Token key={i}>{s}</Token>)}
             </div>
           </section>
 
@@ -129,7 +127,7 @@ export function DetailPanel({ entry, lang, kind, onClose, onPrev, onNext, hasPre
             <h4 className="dlabel"># {tc(d.impact, lang)}</h4>
             <ul className="dlist impact">
               {tc(entry.impact, lang).map((it, i) => (
-                <li key={i}><span className="mk star">★</span>{it}</li>
+                <li key={i}><span className="mk">+</span>{it}</li>
               ))}
             </ul>
           </section>

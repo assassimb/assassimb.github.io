@@ -222,11 +222,11 @@ export default function App() {
             <SideCard index="05" title={tc(s.knowledge, lang)}>
               <div className="know-label">{tc(RM.ui.languages, lang)}</div>
               <div className="tokens-wrap">
-                {RM.knowledge.languages.map((c, i) => <Token key={i} i={i}>{c}</Token>)}
+                {RM.knowledge.languages.map((c, i) => <Token key={i}>{c}</Token>)}
               </div>
               <div className="know-label" style={{ marginTop: 16 }}>{tc(RM.ui.tools, lang)}</div>
               <div className="tokens-wrap">
-                {RM.knowledge.tools.map((c, i) => <Token key={i} i={i + 2}>{c}</Token>)}
+                {RM.knowledge.tools.map((c, i) => <Token key={i}>{c}</Token>)}
               </div>
             </SideCard>
           </div>

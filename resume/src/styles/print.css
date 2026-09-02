@@ -33,9 +33,13 @@
 
 /* ---------------------------------------------------------------- page */
 
+/* Margin 0 on purpose: the browser draws its print header/footer (title,
+   timestamp, URL, page number) inside the @page margin area. With no margin
+   there is nowhere to draw them, so they are suppressed. The real 11×12mm
+   page margins live as padding on .pdoc in the print block below. */
 @page {
   size: Letter;
-  margin: 11mm 12mm;
+  margin: 0;
 }
 
 /* ------------------------------------------------------------ document */
@@ -256,7 +260,11 @@ body[data-resume-preview="on"] .pdoc {
     display: none !important;
   }
 
-  .pdoc { display: block; }
+  .pdoc {
+    display: block;
+    padding: 11mm 12mm;         /* replaces @page margin, see @page note */
+    box-sizing: border-box;
+  }
 
   /* Widow and orphan control. A lone trailing line of a bullet on the next
      page is the most common way a one-page résumé silently becomes two. */
