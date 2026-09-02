@@ -67,7 +67,7 @@
 }
 
 .pdoc-name {
-  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
   font-size: calc(var(--pdoc-base) * 2.45);
   font-weight: 700;
   letter-spacing: -0.6pt;
@@ -133,7 +133,7 @@
 }
 
 .pentry-role {
-  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
   font-size: calc(var(--pdoc-base) * 1.09);
   font-weight: 600;
   margin: 0;
@@ -254,7 +254,6 @@ body[data-resume-preview="on"] .pdoc {
   .topbar,
   .overlay,
   .bg-grid,
-  .bg-glow,
   .pdf-export,
   .material-symbols-outlined {
     display: none !important;

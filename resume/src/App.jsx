@@ -10,10 +10,9 @@ import "./styles/print.css";
    in-canvas "Tweaks" panel (host-only chrome). For the standalone site they are
    fixed to the design defaults. Flip these to retheme. */
 const TWEAKS = {
-  accent: "#5cf2c4",
+  accent: "#4cc9a4",
   density: "regular", // "compact" | "regular" | "comfy"
   grid: true,
-  glow: true,
 };
 
 /* PDF export.
@@ -57,7 +56,6 @@ function NavBar({ lang, setLang, onJump, onExport }) {
     <header className="topbar">
       <div className="topbar-inner">
         <a className="brand" href="#top" onClick={(e) => { e.preventDefault(); onJump("top"); }}>
-          <span className="dots" aria-hidden="true"><i></i><i></i><i></i></span>
           <span className="brand-path">assim_b<span className="brand-ext">.cv</span></span>
         </a>
         <nav className="nav">
@@ -109,20 +107,19 @@ function Hero({ lang }) {
   );
 }
 
-function SectionHead({ index, title }) {
+function SectionHead({ title }) {
   return (
     <div className="sec-head">
-      <span className="sec-index">{index}</span>
       <h2>{title}</h2>
       <span className="sec-rule" aria-hidden="true"></span>
     </div>
   );
 }
 
-function SideCard({ index, title, children }) {
+function SideCard({ title, children }) {
   return (
     <div className="side-card">
-      <div className="side-head"><span className="side-index">{index}</span>{title}</div>
+      <div className="side-head">{title}</div>
       {children}
     </div>
   );
@@ -140,8 +137,7 @@ export default function App() {
     b.style.setProperty("--accent", tw.accent);
     b.setAttribute("data-density", tw.density);
     b.setAttribute("data-grid", tw.grid ? "on" : "off");
-    b.setAttribute("data-glow", tw.glow ? "on" : "off");
-  }, [lang, tw.accent, tw.density, tw.grid, tw.glow]);
+  }, [lang, tw.accent, tw.density, tw.grid]);
 
   const all = [...RM.experience.map(e => ({ e, kind: "experience" })),
                ...RM.university.map(e => ({ e, kind: "university" }))];
@@ -161,7 +157,6 @@ export default function App() {
     <>
     <div className="page">
       <div className="bg-grid" aria-hidden="true"></div>
-      <div className="bg-glow" aria-hidden="true"></div>
 
       <NavBar lang={lang} setLang={setLang} onJump={jump} onExport={exportPdf} />
       <Hero lang={lang} />
@@ -169,7 +164,7 @@ export default function App() {
       <main className="layout">
         <div className="main-col">
           <section id="experience" className="block">
-            <SectionHead index="01" title={tc(s.experience, lang)} />
+            <SectionHead title={tc(s.experience, lang)} />
             <div className="entries">
               {RM.experience.map((e, i) => (
                 <EntryCard key={e.id} entry={e} lang={lang} kind="experience" index={i}
@@ -179,7 +174,7 @@ export default function App() {
           </section>
 
           <section id="university" className="block">
-            <SectionHead index="02" title={tc(s.university, lang)} />
+            <SectionHead title={tc(s.university, lang)} />
             <div className="entries">
               {RM.university.map((e, i) => (
                 <EntryCard key={e.id} entry={e} lang={lang} kind="university" index={i}
@@ -191,7 +186,7 @@ export default function App() {
 
         <aside className="aside">
           <div id="education">
-            <SideCard index="03" title={tc(s.education, lang)}>
+            <SideCard title={tc(s.education, lang)}>
               <ul className="edu-list">
                 {RM.education.map((e, i) => (
                   <li key={i}>
@@ -204,7 +199,7 @@ export default function App() {
             </SideCard>
           </div>
 
-          <SideCard index="04" title={tc(s.skills, lang)}>
+          <SideCard title={tc(s.skills, lang)}>
             <ul className="skill-list">
               {RM.skills.map((sk, i) => (
                 <li key={i}>
@@ -219,7 +214,7 @@ export default function App() {
           </SideCard>
 
           <div id="knowledge">
-            <SideCard index="05" title={tc(s.knowledge, lang)}>
+            <SideCard title={tc(s.knowledge, lang)}>
               <div className="know-label">{tc(RM.ui.languages, lang)}</div>
               <div className="tokens-wrap">
                 {RM.knowledge.languages.map((c, i) => <Token key={i}>{c}</Token>)}
@@ -231,7 +226,7 @@ export default function App() {
             </SideCard>
           </div>
 
-          <SideCard index="06" title={tc(s.interests, lang)}>
+          <SideCard title={tc(s.interests, lang)}>
             <ul className="skill-list">
               {RM.interests.map((it, i) => (
                 <li key={i}>
@@ -249,7 +244,7 @@ export default function App() {
 
       <footer className="site-foot">
         <span className="foot-path">assim_b.cv</span>
-        <span className="foot-end">{lang === "fr" ? "fin du dossier" : "end of file"}</span>
+        <span className="foot-end">{new Date().getFullYear()}</span>
       </footer>
 
       {current && (

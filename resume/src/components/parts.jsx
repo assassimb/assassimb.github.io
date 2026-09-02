@@ -13,9 +13,9 @@ export function ConsoleIcon({ name, className = "" }) {
   return <span className={"material-symbols-outlined " + className} aria-hidden="true">{name}</span>;
 }
 
-export function Avatar({ text, size = 56, glow = true, src, alt }) {
+export function Avatar({ text, size = 56, src, alt }) {
   return (
-    <div className={"avatar" + (glow ? " glow" : "") + (src ? " avatar-photo" : "")}
+    <div className={"avatar" + (src ? " avatar-photo" : "")}
       style={{ width: size, height: size, fontSize: size * 0.34 }}>
       {src ? <img src={src} alt={alt || text} /> : text}
     </div>
@@ -24,7 +24,6 @@ export function Avatar({ text, size = 56, glow = true, src, alt }) {
 
 /* experience / project entry */
 export function EntryCard({ entry, lang, kind, index, onOpen, reveal }) {
-  const num = String(index + 1).padStart(2, "0");
   return (
     <button
       className={"entry" + (reveal ? " reveal" : "")}
@@ -33,7 +32,6 @@ export function EntryCard({ entry, lang, kind, index, onOpen, reveal }) {
     >
       <span className="entry-edge" aria-hidden="true"></span>
       <div className="entry-head">
-        <span className="entry-num">{num}</span>
         <div className="entry-headtext">
           <h3 className="entry-role">{tc(entry.role, lang)}</h3>
           <div className="entry-orgline">
@@ -81,7 +79,6 @@ export function DetailPanel({ entry, lang, kind, onClose, onPrev, onNext, hasPre
       <div className="scrim" onClick={onClose}></div>
       <aside className="panel">
         <div className="panel-bar">
-          <span className="dots" aria-hidden="true"><i></i><i></i><i></i></span>
           <span className="panel-file">{file}</span>
           <button className="x-btn" onClick={onClose} aria-label={tc(d.close, lang)}>
             <ConsoleIcon name="close" />
