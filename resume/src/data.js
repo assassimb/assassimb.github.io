@@ -80,11 +80,11 @@ export const RESUME = {
         en: "Billing and payment ecosystem of an electronic medical record (EMR): Kafka events, PAX terminals, online payments and a redesigned prepayment model."
       },
       stack: [
-        "Java",
         "Spring Boot",
         "Kafka",
-        "Kubernetes",
         "Angular",
+        "Kubernetes",
+        "Java",
         { fr: "Terminaux PAX", en: "PAX terminals" },
         "Feature flags",
         { fr: "Tests unitaires & e2e", en: "Unit & e2e tests" }
