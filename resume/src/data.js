@@ -74,10 +74,10 @@ export const RESUME = {
       type: { fr: "Emploi", en: "Employment" },
       /* One-page preset: always keep the Kafka bullet (most in-demand skill)
          and the transaction-volume outcome. See `pinned` in condense.js. */
-      pinned: ["Kafka", "millions"],
+      pinned: ["Kafka", "millions", "12"],
       summary: {
-        fr: "Écosystème de facturation et de paiement d'un dossier médical électronique (DME) : événements Kafka, terminaux PAX, paiements en ligne et refonte du modèle de prépaiement.",
-        en: "Billing and payment ecosystem of an electronic medical record (EMR): Kafka events, PAX terminals, online payments and a redesigned prepayment model."
+        fr: "Écosystème de facturation et de paiement d'un DME : événements Kafka, terminaux PAX et paiements en ligne dans 12+ cliniques, traitant des millions de dollars par année.",
+        en: "Billing and payment ecosystem of an EMR: Kafka events, PAX terminals and online payments across 12+ clinics, processing millions of dollars a year."
       },
       stack: [
         "Spring Boot",
@@ -90,8 +90,8 @@ export const RESUME = {
         { fr: "Tests unitaires & e2e", en: "Unit & e2e tests" }
       ],
       overview: {
-        fr: "Au sein de l'équipe facturation d'Omnimed, j'ai travaillé sur l'écosystème de paiement d'un dossier médical électronique utilisé par des cliniques. Le travail couvre toute la chaîne, du back-end Java/Spring au front-end Angular, dans une architecture où les services communiquent par événements Kafka et sont déployés sur Kubernetes. L'objectif : permettre aux cliniques d'encaisser de façon fiable et conforme, tout en faisant évoluer une logique de facturation héritée sans interrompre le service.",
-        en: "Within Omnimed's billing team, I worked on the payment ecosystem of an electronic medical record used by clinics. The work spans the full chain, from the Java/Spring back-end to the Angular front-end, in an architecture where services communicate through Kafka events and are deployed on Kubernetes. The goal: let clinics collect payments reliably and compliantly, while evolving legacy billing logic without disrupting service."
+        fr: "Au sein de l'équipe facturation d'Omnimed, j'ai travaillé sur l'écosystème de paiement d'un dossier médical électronique utilisé par des cliniques. Le travail couvre toute la chaîne, du back-end Java/Spring au front-end Angular, dans une architecture où les services communiquent par événements Kafka et sont déployés sur Kubernetes. Le résultat : plus de 12 cliniques encaissent de façon fiable et conforme, avec des transactions qui totalisent plusieurs millions de dollars par année, le tout en faisant évoluer une logique de facturation héritée sans interrompre le service.",
+        en: "Within Omnimed's billing team, I worked on the payment ecosystem of an electronic medical record used by clinics. The work spans the full chain, from the Java/Spring back-end to the Angular front-end, in an architecture where services communicate through Kafka events and are deployed on Kubernetes. The result: 12+ clinics collect payments reliably and compliantly, with transactions adding up to millions of dollars a year, all while evolving legacy billing logic without disrupting service."
       },
       responsibilities: {
         fr: [
@@ -104,7 +104,7 @@ export const RESUME = {
           "Travailler sur les bases de code back-end Java/Spring et front-end Angular : ajout de fonctionnalités et refactorisation de la logique de facturation héritée.",
           "Stabiliser les suites de tests unitaires et de bout en bout.",
           "Accélérer le développement et les revues de code avec des outils d'IA agentiques (Claude Code).",
-          "Piloter l'intégration des cliniques de bout en bout depuis la toute première clinique intégrée : configuration PAXSTORE, déploiements sur site, liaison avec Nuvei et documentation de support."
+          "Piloter l'intégration de plus de 12 cliniques de bout en bout depuis la toute première : configuration PAXSTORE, déploiements sur site jusqu'à 4 terminaux, liaison avec Nuvei et documentation de support."
         ],
         en: [
           "Integrated PAX payment terminals into the Omnimed web platform to enable wireless, in-app payment creation.",
@@ -116,7 +116,7 @@ export const RESUME = {
           "Worked across the Java/Spring back-end and Angular front-end: adding features and refactoring legacy billing logic.",
           "Stabilized the unit and end-to-end test suites.",
           "Accelerated development and code reviews with agentic AI tooling (Claude Code).",
-          "Drove clinic integrations end to end, starting with the very first clinic onboarded: PAXSTORE configuration, on-site deployments, Nuvei liaison and support documentation."
+          "Drove 12+ clinic integrations end to end, starting with the very first one: PAXSTORE configuration, on-site deployments of up to 4 terminals, Nuvei liaison and support documentation."
         ]
       },
       impact: {
