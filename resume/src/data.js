@@ -16,8 +16,8 @@ export const RESUME = {
     email: "assassimb@gmail.com",
     location: { fr: "Québec, Canada", en: "Québec, Canada" },
     tagline: {
-      fr: "Développeur full-stack et passionné d'intelligence artificielle, à l'aise du front-end au back-end comme du matériel embarqué.",
-      en: "Full-stack developer with a passion for artificial intelligence, equally at home from front-end to back-end and embedded hardware."
+      fr: "Développeur full-stack (Java/Spring, TypeScript/Angular, React) : systèmes de paiement, services Kafka et outils d'agents IA pour mon équipe.",
+      en: "Full-stack developer (Java/Spring, TypeScript/Angular, React) shipping payment systems, Kafka services and AI agent tooling for my team."
     }
   },
 
@@ -74,7 +74,7 @@ export const RESUME = {
       type: { fr: "Emploi", en: "Employment" },
       /* One-page preset: always keep the Kafka bullet (most in-demand skill)
          and the transaction-volume outcome. See `pinned` in condense.js. */
-      pinned: ["Kafka", "millions", "12"],
+      pinned: ["Kafka", "millions", "12", "Claude Code", "incidents", "pull requests"],
       summary: {
         fr: "Écosystème de facturation et de paiement d'un DME : événements Kafka, terminaux PAX et paiements en ligne dans 12+ cliniques, traitant des millions de dollars par année.",
         en: "Billing and payment ecosystem of an EMR: Kafka events, PAX terminals and online payments across 12+ clinics, processing millions of dollars a year."
@@ -83,7 +83,9 @@ export const RESUME = {
         "Spring Boot",
         "Kafka",
         "Angular",
+        "TypeScript",
         "Kubernetes",
+        "Claude Code",
         "Java",
         { fr: "Terminaux PAX", en: "PAX terminals" },
         "Feature flags",
@@ -98,24 +100,28 @@ export const RESUME = {
           "Intégrer les terminaux de paiement PAX à la plateforme web d'Omnimed pour permettre la création de paiements sans fil directement dans l'application.",
           "Automatiser le retour des données de transaction du terminal vers le système.",
           "Développer et intégrer les paiements en ligne SafeCharge (Nuvei), avec des champs de carte conformes PCI via iframe et la gestion des codes d'erreur de la passerelle.",
-          "Publier et consommer des événements Kafka pour propager les données de transaction et synchroniser les services de facturation de façon asynchrone.",
+          "Développer des producteurs et consommateurs Kafka pour propager les données de transaction et synchroniser les services de facturation de façon asynchrone.",
           "Mettre en place des architectures à feature flags pour déployer progressivement les fonctionnalités à des clients ciblés.",
           "Contribuer à la refonte de l'écosystème de facturation en implémentant un modèle de prépaiement par lots (services prépayés consommés sur de futures factures).",
           "Travailler sur les bases de code back-end Java/Spring et front-end Angular : ajout de fonctionnalités et refactorisation de la logique de facturation héritée.",
-          "Stabiliser les suites de tests unitaires et de bout en bout.",
-          "Accélérer le développement et les revues de code avec des outils d'IA agentiques (Claude Code).",
+          "Corriger les tests de bout en bout instables et ajouter de la couverture unitaire et e2e sur le code de facturation et de paiement.",
+          "Créer des skills Claude Code utilisés par mon équipe (dev, Jira et docs, analyse de logs, facturation) et former l'équipe au développement assisté par IA.",
+          "Agir comme contact technique principal auprès de Nuvei et des cliniques, et résoudre les incidents de paiement en production.",
+          "Intégrer et accompagner 2 à 3 développeurs, et réviser régulièrement les pull requests de l'équipe.",
           "Piloter l'intégration de plus de 12 cliniques de bout en bout depuis la toute première : configuration PAXSTORE, déploiements sur site jusqu'à 4 terminaux, liaison avec Nuvei et documentation de support."
         ],
         en: [
           "Integrated PAX payment terminals into the Omnimed web platform to enable wireless, in-app payment creation.",
           "Automated the return of terminal transaction data back into the system.",
           "Developed and integrated SafeCharge (Nuvei) online payments, with PCI-compliant card fields via iframe and gateway error-code handling.",
-          "Published and consumed Kafka events to propagate transaction data and synchronize billing services asynchronously.",
+          "Built Kafka producers and consumers to propagate transaction data and synchronize billing services asynchronously.",
           "Implemented feature-flag architectures to progressively roll out functionality to selected clients.",
           "Contributed to the redesign of the billing ecosystem with a bundle prepayment model (prepaid services consumed across future invoices).",
           "Worked across the Java/Spring back-end and Angular front-end: adding features and refactoring legacy billing logic.",
-          "Stabilized the unit and end-to-end test suites.",
-          "Accelerated development and code reviews with agentic AI tooling (Claude Code).",
+          "Fixed flaky end-to-end tests and added unit and e2e coverage to billing and payment code.",
+          "Built Claude Code skills and plugins my team uses (dev workflows, Jira tickets and docs, log analysis, billing context) and taught the team AI-assisted development.",
+          "Served as main technical contact for Nuvei and the clinics, and resolved production payment incidents.",
+          "Onboarded and mentored 2–3 developers and regularly reviewed the team's pull requests.",
           "Drove 12+ clinic integrations end to end, starting with the very first one: PAXSTORE configuration, on-site deployments of up to 4 terminals, Nuvei liaison and support documentation."
         ]
       },
@@ -146,21 +152,21 @@ export const RESUME = {
         fr: "Interfaces React et solutions infonuagiques au sein d'une architecture microservices sur AWS, avec une forte culture de tests.",
         en: "React interfaces and cloud solutions within a microservices architecture on AWS, with a strong testing culture."
       },
-      stack: ["React", "Jest", "Robot Framework", "Microservices", "AWS", "JIRA"],
+      stack: ["React", "TypeScript", "Jest", "Robot Framework", "Microservices", "AWS", "JIRA"],
       overview: {
         fr: "Chez GoTo, entreprise technologique au rythme soutenu, je me suis spécialisé dans le développement d'interfaces conviviales en React. Le rôle demandait de s'intégrer rapidement à une architecture microservices déployée sur AWS et de soutenir une culture de qualité forte, où chaque fonctionnalité était couverte par des tests unitaires et de bout en bout.",
         en: "At GoTo, a fast-paced tech company, I specialized in building user-friendly interfaces in React. The role meant quickly fitting into a microservices architecture deployed on AWS and upholding a strong quality culture, where every feature was covered by unit and end-to-end tests."
       },
       responsibilities: {
         fr: [
-          "Développer des interfaces utilisateur conviviales avec React.",
+          "Développer des interfaces utilisateur conviviales avec React et TypeScript.",
           "Assurer la qualité du code avec des tests unitaires et de bout en bout (Jest et Robot Framework).",
           "Gérer les tâches tout au long du cycle de vie des sprints avec JIRA.",
           "S'intégrer rapidement à une architecture microservices et aux flux de travail dans un environnement AWS.",
           "Contribuer au développement de solutions évolutives et efficaces dans un contexte technologique rapide."
         ],
         en: [
-          "Built user-friendly interfaces with React.",
+          "Built user-friendly interfaces with React and TypeScript.",
           "Ensured code quality with unit and end-to-end tests (Jest and Robot Framework).",
           "Managed tasks throughout the sprint lifecycle with JIRA.",
           "Quickly adapted to a microservices architecture and workflows in an AWS environment.",
@@ -513,8 +519,8 @@ export const RESUME = {
   ],
 
   knowledge: {
-    languages: ["Java", "C", "C#", "SQL", "Python", "MATLAB", "Octave", "FPGA", "UML", "PHP", "Smarty", "Angular", "React", "VueJS"],
-    tools: ["GIT", "Spring Boot", "Kafka", "Kubernetes", "Docker", "AWS", "Claude Code", "Jest", "JIRA", "pgAdmin4", "phpMyAdmin", "Xilinx", "Altium", "SOLIDWORKS", "AutoCAD", "Linux", "Visual Studio", "ArduinoX", "Office 365", "IntelliJ", "VS Code"]
+    languages: ["Java", "TypeScript", "JavaScript", "SQL", "Python", "C#", "C", "PHP", "Angular", "React", "VueJS", "MATLAB", "FPGA", "UML"],
+    tools: ["Spring Boot", "Kafka", "Kubernetes", "Docker", "AWS", "Claude Code", "Jenkins", "Maven", "Git", "Jest", "Robot Framework", "JIRA", "PostgreSQL / pgAdmin4", "Linux", "IntelliJ", "VS Code", "SOLIDWORKS", "Altium"]
   },
 
   skills: [

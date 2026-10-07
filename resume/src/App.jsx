@@ -127,7 +127,13 @@ function SideCard({ title, children }) {
 
 export default function App() {
   const tw = TWEAKS;
-  const [lang, setLang] = useState(() => localStorage.getItem("resume-lang") || "fr");
+  /* ?lang=en|fr wins over the stored choice, so a shared link opens in the
+     language it was sent in. */
+  const [lang, setLang] = useState(() => {
+    const fromUrl = new URLSearchParams(window.location.search).get("lang");
+    if (fromUrl === "en" || fromUrl === "fr") return fromUrl;
+    return localStorage.getItem("resume-lang") || "fr";
+  });
   const [openId, setOpenId] = useState(null);
 
   useEffect(() => { localStorage.setItem("resume-lang", lang); }, [lang]);

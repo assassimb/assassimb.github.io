@@ -38,10 +38,10 @@ function pickList(v, lang) {
 export const PRESETS = {
   onepage: {
     id: "onepage",
-    bullets: [4, 3, 3, 2, 1, 0, 0],
+    bullets: [6, 3, 2, 1, 1, 0, 0],
     levels: ["full", "full", "full", "full", "brief", "line", "line"],
     stackCap: { full: 6, brief: 4, line: 0 },
-    projects: { max: 2, bullets: 1, level: "brief", stackCap: 4 },
+    projects: { max: 1, bullets: 1, level: "brief", stackCap: 4 },
     includeInterests: false,
     includeSoftSkills: false,
     includeProjects: true,
