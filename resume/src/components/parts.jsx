@@ -94,11 +94,35 @@ export function EntryCard({ entry, lang, kind, index, onOpen, reveal }) {
 
 export function DetailPanel({ entry, lang, kind, onClose, onPrev, onNext, hasPrev, hasNext }) {
   const ref = useRef(null);
+  const panelRef = useRef(null);
+  const closeRef = useRef(null);
+
+  /* Once per open: lock the page behind the modal, move focus into it, and
+     hand focus back to the card that opened it on close. */
+  useEffect(() => {
+    const opener = document.activeElement;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+    return () => {
+      document.body.style.overflow = overflow;
+      if (opener instanceof HTMLElement) opener.focus({ preventScroll: true });
+    };
+  }, []);
+
   useEffect(() => {
     function onKey(e) {
       if (e.key === "Escape") onClose();
       else if (e.key === "ArrowRight" && hasNext) onNext();
       else if (e.key === "ArrowLeft" && hasPrev) onPrev();
+      else if (e.key === "Tab") {
+        // Keep Tab cycling inside the panel (aria-modal).
+        const f = [...panelRef.current.querySelectorAll("button:not(:disabled), a[href]")];
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
     }
     document.addEventListener("keydown", onKey);
     if (ref.current) ref.current.scrollTop = 0;
@@ -109,12 +133,12 @@ export function DetailPanel({ entry, lang, kind, onClose, onPrev, onNext, hasPre
   const file = entry.id + (kind === "university" ? ".proj" : ".log");
 
   return (
-    <div className="overlay" role="dialog" aria-modal="true">
+    <div className="overlay" role="dialog" aria-modal="true" aria-labelledby="detail-role">
       <div className="scrim" onClick={onClose}></div>
-      <aside className="panel">
+      <aside className="panel" ref={panelRef}>
         <div className="panel-bar">
           <span className="panel-file">{file}</span>
-          <button className="x-btn" onClick={onClose} aria-label={tc(d.close, lang)}>
+          <button className="x-btn" ref={closeRef} onClick={onClose} aria-label={tc(d.close, lang)}>
             <ConsoleIcon name="close" />
           </button>
         </div>
@@ -124,7 +148,7 @@ export function DetailPanel({ entry, lang, kind, onClose, onPrev, onNext, hasPre
             <Avatar text={entry.orgInitial} size={58} />
             <div>
               <div className="panel-type">{tc(entry.type, lang)}</div>
-              <h2 className="panel-role">{tc(entry.role, lang)}</h2>
+              <h2 className="panel-role" id="detail-role">{tc(entry.role, lang)}</h2>
               <div className="panel-meta">
                 <span><ConsoleIcon name="business" />{entry.org}</span>
                 <span><ConsoleIcon name="calendar_month" />{tc(entry.period, lang)}</span>

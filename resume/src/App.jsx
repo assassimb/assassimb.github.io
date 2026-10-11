@@ -148,13 +148,22 @@ export default function App() {
   /* ?lang=en|fr wins over the stored choice, so a shared link opens in the
      language it was sent in. */
   const [lang, setLang] = useState(() => {
+    const valid = (v) => v === "en" || v === "fr";
     const fromUrl = new URLSearchParams(window.location.search).get("lang");
-    if (fromUrl === "en" || fromUrl === "fr") return fromUrl;
-    return localStorage.getItem("resume-lang") || "fr";
+    if (valid(fromUrl)) return fromUrl;
+    /* Storage can throw (private mode, blocked site data) or hold a stale
+       value; either way fall back to French. */
+    try {
+      const stored = localStorage.getItem("resume-lang");
+      if (valid(stored)) return stored;
+    } catch { /* ignore */ }
+    return "fr";
   });
   const [openId, setOpenId] = useState(null);
 
-  useEffect(() => { localStorage.setItem("resume-lang", lang); }, [lang]);
+  useEffect(() => {
+    try { localStorage.setItem("resume-lang", lang); } catch { /* ignore */ }
+  }, [lang]);
   useEffect(() => {
     document.documentElement.lang = lang;
     const b = document.body;

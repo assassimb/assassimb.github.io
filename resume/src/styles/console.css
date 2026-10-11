@@ -259,9 +259,9 @@
   /* ---- responsive ---- */
   @media (max-width: 940px) {
     .layout { grid-template-columns: 1fr; gap: 18px; }
-    .nav { display: none; }
   }
   @media (max-width: 660px) {
+    .nav { display: none; }
     .hero-inner { flex-direction: column-reverse; align-items: flex-start; gap: 28px; }
     .hero { padding: 28px 20px 24px; }
     .block, .aside .side-card { padding: 16px 14px; }
