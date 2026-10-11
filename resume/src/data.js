@@ -30,6 +30,24 @@ export const RESUME = {
       knowledge:  { fr: "Connaissances", en: "Technical knowledge" },
       interests:  { fr: "Intérêts et loisirs", en: "Interests & hobbies" }
     },
+    /* Short mono labels: the top bar and section eyebrows. Kept to one word
+       so the nav never wraps. */
+    short: {
+      experience: { fr: "exp", en: "exp" },
+      university: { fr: "projets", en: "projects" },
+      education:  { fr: "formation", en: "education" },
+      skills:     { fr: "forces", en: "strengths" },
+      knowledge:  { fr: "stack", en: "stack" },
+      interests:  { fr: "loisirs", en: "hobbies" }
+    },
+    counts: {
+      experience: { fr: "postes", en: "roles" },
+      university: { fr: "projets", en: "projects" },
+      now:        { fr: "aujourd'hui", en: "today" },
+      present:    { fr: "présent", en: "present" },
+      year:       { fr: ["an", "ans"], en: ["yr", "yrs"] },
+      month:      { fr: ["mois", "mois"], en: ["mo", "mos"] }
+    },
     detail: {
       overview:       { fr: "Aperçu", en: "Overview" },
       responsibilities:{ fr: "Responsabilités clés", en: "Key responsibilities" },

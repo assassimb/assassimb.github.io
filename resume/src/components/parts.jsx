@@ -22,8 +22,38 @@ export function Avatar({ text, size = 56, src, alt }) {
   );
 }
 
+/* "01/2024 – Présent" → { start, end, months }. months is null when either
+   side is a bare year ("2017 – 2018"), since a duration would be a guess. */
+export function parsePeriod(period) {
+  const [start, end = ""] = period.split(/\s*[–-]\s*/);
+  const mmyyyy = (s) => {
+    const m = s.match(/^(\d{2})\/(\d{4})$/);
+    return m ? { m: +m[1], y: +m[2] } : null;
+  };
+  const a = mmyyyy(start);
+  const now = new Date();
+  const b = /^\d/.test(end) ? mmyyyy(end) : { m: now.getMonth() + 1, y: now.getFullYear() };
+  const months = a && b ? (b.y - a.y) * 12 + (b.m - a.m) + 1 : null;
+  return { start, end: /^\d/.test(end) ? end : null, months };
+}
+
+function formatDuration(months, lang) {
+  const c = RC.ui.counts;
+  const y = Math.floor(months / 12), m = months % 12;
+  const part = (n, unit) => `${n} ${tc(unit, lang)[n > 1 ? 1 : 0]}`;
+  if (y === 0) return part(m, c.month);
+  return m === 0 ? part(y, c.year) : `${part(y, c.year)} ${part(m, c.month)}`;
+}
+
+/* Type chip color carries meaning: employment, internship, project. */
+function typeKey(entry, kind) {
+  if (kind === "university") return "proj";
+  return entry.type.fr === "Stage" ? "intern" : "work";
+}
+
 /* experience / project entry */
 export function EntryCard({ entry, lang, kind, index, onOpen, reveal }) {
+  const p = parsePeriod(tc(entry.period, lang));
   return (
     <button
       className={"entry" + (reveal ? " reveal" : "")}
@@ -31,16 +61,19 @@ export function EntryCard({ entry, lang, kind, index, onOpen, reveal }) {
       onClick={() => onOpen(entry)}
     >
       <span className="entry-edge" aria-hidden="true"></span>
+      <div className="entry-when">
+        <span>{p.start}</span>
+        <span>→ {p.end || tc(RC.ui.counts.present, lang)}</span>
+        {p.months && <small>{formatDuration(p.months, lang)}</small>}
+      </div>
+      <div className="entry-main">
       <div className="entry-head">
+        <span className="entry-tile" aria-hidden="true">{entry.orgInitial}</span>
         <div className="entry-headtext">
           <h3 className="entry-role">{tc(entry.role, lang)}</h3>
-          <div className="entry-orgline">
-            <span className="entry-org">{entry.org}</span>
-            <span className="entry-dot">·</span>
-            <span className="entry-period">{tc(entry.period, lang)}</span>
-          </div>
+          <div className="entry-org">{entry.org}</div>
         </div>
-        <span className={"entry-type type-" + (kind === "university" ? "proj" : "work")}>
+        <span className={"entry-type type-" + typeKey(entry, kind)}>
           {tc(entry.type, lang)}
         </span>
       </div>
@@ -53,6 +86,7 @@ export function EntryCard({ entry, lang, kind, index, onOpen, reveal }) {
         <span className="entry-cta">
           {tc(RC.ui.detail.open, lang)} <ConsoleIcon name="arrow_forward" />
         </span>
+      </div>
       </div>
     </button>
   );

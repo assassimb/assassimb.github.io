@@ -45,7 +45,7 @@ function useExportPdf(lang) {
 }
 
 function NavBar({ lang, setLang, onJump, onExport }) {
-  const s = RM.ui.sections;
+  const s = RM.ui.short;
   const links = [
     ["experience", s.experience],
     ["university", s.university],
@@ -107,19 +107,37 @@ function Hero({ lang }) {
   );
 }
 
-function SectionHead({ title }) {
+/* "// 01 — exp" eyebrow, display title, optional mono count line. */
+function Eyebrow({ n, label }) {
+  return <span className="eyebrow">// {String(n).padStart(2, "0")} — {label}</span>;
+}
+
+function SectionHead({ n, label, title, meta }) {
   return (
     <div className="sec-head">
+      <Eyebrow n={n} label={label} />
       <h2>{title}</h2>
-      <span className="sec-rule" aria-hidden="true"></span>
+      {meta && <span className="sec-meta">{meta}</span>}
     </div>
   );
 }
 
-function SideCard({ title, children }) {
+/* "7 postes · 2017 → aujourd'hui", derived from the entries themselves. */
+function sectionMeta(entries, noun, lang) {
+  const periods = entries.map(e => tc(e.period, "fr"));
+  const years = periods.flatMap(p => (p.match(/\d{4}/g) || []).map(Number));
+  const ongoing = periods.some(p => /Présent/.test(p));
+  const end = ongoing ? tc(RM.ui.counts.now, lang) : Math.max(...years);
+  return `${entries.length} ${tc(noun, lang)} · ${Math.min(...years)} → ${end}`;
+}
+
+function SideCard({ n, label, title, children }) {
   return (
     <div className="side-card">
-      <div className="side-head">{title}</div>
+      <div className="sec-head">
+        <Eyebrow n={n} label={label} />
+        <h2>{title}</h2>
+      </div>
       {children}
     </div>
   );
@@ -157,6 +175,7 @@ export default function App() {
   }, []);
 
   const s = RM.ui.sections;
+  const sh = RM.ui.short;
   const exportPdf = useExportPdf(lang);
 
   return (
@@ -170,7 +189,8 @@ export default function App() {
       <main className="layout">
         <div className="main-col">
           <section id="experience" className="block">
-            <SectionHead title={tc(s.experience, lang)} />
+            <SectionHead n={1} label={tc(sh.experience, lang)} title={tc(s.experience, lang)}
+              meta={sectionMeta(RM.experience, RM.ui.counts.experience, lang)} />
             <div className="entries">
               {RM.experience.map((e, i) => (
                 <EntryCard key={e.id} entry={e} lang={lang} kind="experience" index={i}
@@ -180,7 +200,8 @@ export default function App() {
           </section>
 
           <section id="university" className="block">
-            <SectionHead title={tc(s.university, lang)} />
+            <SectionHead n={2} label={tc(sh.university, lang)} title={tc(s.university, lang)}
+              meta={sectionMeta(RM.university, RM.ui.counts.university, lang)} />
             <div className="entries">
               {RM.university.map((e, i) => (
                 <EntryCard key={e.id} entry={e} lang={lang} kind="university" index={i}
@@ -192,7 +213,7 @@ export default function App() {
 
         <aside className="aside">
           <div id="education">
-            <SideCard title={tc(s.education, lang)}>
+            <SideCard n={3} label={tc(sh.education, lang)} title={tc(s.education, lang)}>
               <ul className="edu-list">
                 {RM.education.map((e, i) => (
                   <li key={i}>
@@ -205,7 +226,7 @@ export default function App() {
             </SideCard>
           </div>
 
-          <SideCard title={tc(s.skills, lang)}>
+          <SideCard n={4} label={tc(sh.skills, lang)} title={tc(s.skills, lang)}>
             <ul className="skill-list">
               {RM.skills.map((sk, i) => (
                 <li key={i}>
@@ -220,7 +241,7 @@ export default function App() {
           </SideCard>
 
           <div id="knowledge">
-            <SideCard title={tc(s.knowledge, lang)}>
+            <SideCard n={5} label={tc(sh.knowledge, lang)} title={tc(s.knowledge, lang)}>
               <div className="know-label">{tc(RM.ui.languages, lang)}</div>
               <div className="tokens-wrap">
                 {RM.knowledge.languages.map((c, i) => <Token key={i}>{c}</Token>)}
@@ -232,7 +253,7 @@ export default function App() {
             </SideCard>
           </div>
 
-          <SideCard title={tc(s.interests, lang)}>
+          <SideCard n={6} label={tc(sh.interests, lang)} title={tc(s.interests, lang)}>
             <ul className="skill-list">
               {RM.interests.map((it, i) => (
                 <li key={i}>
