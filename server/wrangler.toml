@@ -1,0 +1,15 @@
+# computah API: stores every analysed listing so the admin view works across devices.
+# Deployed by .github/workflows/deploy.yml on push to main.
+name = "computah-api"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "computah"
+database_id = "5c1145cc-f778-4535-9eb5-1af1b5c683ff"
+migrations_dir = "migrations"
+
+[vars]
+ALLOWED_ORIGINS = "https://assassimb.github.io,http://localhost:4789,http://localhost:5173"

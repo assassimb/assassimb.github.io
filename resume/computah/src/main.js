@@ -1,0 +1,284 @@
+import "./style.css";
+import { CPUS, GPUS } from "./benchmarks.js";
+import { parseListing } from "./parse.js";
+import { evaluate, negotiation } from "./score.js";
+import { loadRecent, record, adminList, adminDelete, adminClear, adminImport } from "./store.js";
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = n => (n == null ? "?" : `${Math.round(n).toLocaleString("fr-CA")} $`);
+const CPU_MAP = new Map(CPUS), GPU_MAP = new Map(GPUS);
+
+const EXAMPLE = `Gaming PC (RX 6600, 32g RAM, I5)
+450 C$700 C$
+Mis en vente il y a 16 semaines sur Granby, QC
+État
+D’occasion – comme neuf
+CPU: I5 9400
+GPU: Sapphire RX 6600
+RAM: 32G DDR4
+SSD: 256g
+HDD: 1TB
+PSU: 550w Bronze`;
+
+const LABELS = { cpu: "Processeur + carte mère", gpu: "Carte graphique", ram: "Mémoire vive", storage: "Stockage", psu: "Bloc d'alimentation", case: "Boîtier et ventilos", build: "Monté, testé, Windows" };
+
+// Current analysis; overrides are the user's own prices for parts.
+let state = null;
+
+$("cpu-list").innerHTML = CPUS.map(([n]) => `<option value="${esc(n)}">`).join("");
+$("gpu-list").innerHTML = GPUS.map(([n]) => `<option value="${esc(n)}">`).join("");
+
+$("form").addEventListener("submit", e => { e.preventDefault(); analyse(); });
+$("example").addEventListener("click", () => { $("text").value = EXAMPLE; $("link").value = ""; $("price").value = ""; analyse(); });
+
+function analyse(saved) {
+  const text = $("text").value.trim();
+  if (!text) return;
+  const specs = parseListing(text);
+  const typedPrice = Number($("price").value);
+  if ($("price").value !== "" && typedPrice >= 0) specs.price = typedPrice;
+  else if (specs.price != null) $("price").placeholder = `auto : ${specs.price}`;
+  state = { id: saved?.id || crypto.randomUUID?.() || String(Date.now()), text, link: $("link").value.trim(), specs, overrides: saved?.overrides || {} };
+  if (saved?.cpuPick) pick("cpu", saved.cpuPick, false);
+  if (saved?.gpuPick) pick("gpu", saved.gpuPick, false);
+  render();
+}
+
+function pick(kind, name, rerender = true) {
+  const score = (kind === "cpu" ? CPU_MAP : GPU_MAP).get(name);
+  if (!score) return;
+  state.specs[kind] = { name, score, picked: true };
+  state[kind + "Pick"] = name;
+  if (rerender) render();
+}
+
+function render() {
+  const { specs, overrides } = state;
+  const ev = evaluate(specs, overrides);
+  const neg = negotiation(specs, overrides);
+  save(ev, neg);
+
+  const v = ev.verdict;
+  const ratioTxt = ev.ratio == null ? "" : `<p class="ratio">Pièces estimées à <b>${money(ev.value)}</b> pour <b>${money(specs.price)}</b> demandés (${Math.round(ev.ratio * 100)} %).</p>`;
+  const meta = [specs.town, specs.ageDays != null ? `en vente depuis ${ageText(specs.ageDays)}` : null, specs.oldPrice ? `baissé de ${money(specs.oldPrice)}` : null].filter(Boolean).join(" · ");
+
+  $("result").innerHTML = `
+    <div class="panel verdict v-${v.key}">
+      <div class="score-bubble"><span>${ev.buy ?? "?"}</span><small>/100</small></div>
+      <div class="verdict-txt">
+        <p class="kicker">${esc(specs.title || "Annonce")}</p>
+        <h2>${esc(v.label)}</h2>
+        ${ratioTxt}
+        ${meta ? `<p class="meta">${esc(meta)}</p>` : ""}
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h3>Pièces</h3>
+        <table class="parts">
+          <thead><tr><th>Pièce</th><th>Détecté</th><th class="num">Valeur estimée</th></tr></thead>
+          <tbody>${ev.parts.map(p => partRow(p, specs)).join("")}</tbody>
+          <tfoot><tr><td colspan="2">Total</td><td class="num"><b>${money(ev.value)}</b></td></tr></tfoot>
+        </table>
+        <p class="hint">Les valeurs sont des estimations. Corrige-les si tu connais mieux le prix d'une pièce.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Performance</h3>
+        ${ev.perf ? `
+          <p class="tier">${esc(ev.perf.tier)}</p>
+          ${bar("Carte graphique", specs.gpu, ev.perf.gpu, "RTX 4060")}
+          ${bar("Processeur", specs.cpu, ev.perf.cpu, "Ryzen 5 7600")}
+        ` : `<p class="hint">Aucune pièce reconnue pour l'instant.</p>`}
+        ${ev.notes.length ? `<ul class="notes">${ev.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}
+      </div>
+    </div>
+
+    ${neg ? negPanel(neg, specs) : ""}
+  `;
+  $("result").hidden = false;
+  wireResult();
+  renderRecent();
+}
+
+function partRow(p, specs) {
+  const s = specs[p.key];
+  let found = "";
+  if (p.key === "cpu" || p.key === "gpu") {
+    found = s?.score ? `${esc(s.name)} <span class="bench">${s.score.toLocaleString("fr-CA")} pts</span>`
+      : `<input class="pick" data-kind="${p.key}" list="${p.key}-list" placeholder="${s?.unknown ? esc(s.unknown) + " : modèle ?" : "Choisis le modèle"}" />`;
+  } else if (p.key === "ram") found = s ? `${s.gb} Go${s.ddr ? " DDR" + s.ddr : ""}` : "non précisée";
+  else if (p.key === "storage") found = s?.length ? s.map(d => `${d.gb >= 1000 ? d.gb / 1000 + " To" : d.gb + " Go"} ${d.type.toUpperCase()}`).join(" + ") : "non précisé";
+  else if (p.key === "psu") found = s?.watts ? `${s.watts} W${s.rating ? " " + esc(s.rating) : ""}` : "supposé standard";
+  else found = p.key === "case" ? "supposé standard" : "inclus";
+  return `<tr><td>${LABELS[p.key]}</td><td>${found}</td>
+    <td class="num"><input class="val" data-key="${p.key}" type="number" min="0" step="5" value="${p.value ?? ""}" placeholder="?" aria-label="Valeur de ${LABELS[p.key]}" /></td></tr>`;
+}
+
+function bar(label, part, ratio, ref) {
+  if (ratio == null) return `<div class="bar"><div class="bar-head"><span>${label}</span><span>?</span></div></div>`;
+  const pct = Math.min(ratio / 1.6, 1) * 100;
+  return `<div class="bar">
+    <div class="bar-head"><span>${label}</span><span>${Math.round(ratio * 100)} % d'une ${ref}</span></div>
+    <div class="track"><div class="fill" style="width:${pct}%"></div><div class="ref" style="left:${100 / 1.6}%"></div></div>
+  </div>`;
+}
+
+function negPanel(neg, specs) {
+  return `<div class="panel neg">
+    <h3>Négociation</h3>
+    <p class="advice">${esc(neg.advice)}</p>
+    <table class="steps">
+      <thead><tr><th>Offre</th><th class="num">Prix</th><th class="num">Score</th></tr></thead>
+      <tbody>${neg.steps.map(s => `<tr class="${neg.target === s ? "target" : ""}">
+        <td>-${Math.round(s.cut * 100)} %</td><td class="num">${money(s.offer)}</td><td class="num">${s.buy}</td></tr>`).join("")}</tbody>
+    </table>
+    <div class="odds">
+      <div class="bar-head"><span>Chances qu'il accepte</span><span>${neg.odds} %</span></div>
+      <div class="track"><div class="fill" style="width:${neg.odds}%"></div></div>
+      <p class="hint">${esc(oddsWhy(specs))}</p>
+    </div>
+    <label for="msg">Message à envoyer</label>
+    <div class="msg-row"><textarea id="msg" rows="2">${esc(neg.message)}</textarea><button type="button" id="copy" class="ghost">Copier</button></div>
+  </div>`;
+}
+
+function oddsWhy(specs) {
+  const why = [];
+  if (specs.oldPrice) why.push("le prix a déjà baissé");
+  if (specs.ageDays >= 28) why.push(`en vente depuis ${ageText(specs.ageDays)}`);
+  if (specs.flags.open) why.push("le vendeur se dit ouvert aux offres");
+  if (specs.flags.firm) why.push("le vendeur annonce un prix ferme");
+  return why.length ? "Parce que " + why.join(", ") + "." : "Rien dans l'annonce n'indique si le vendeur est pressé.";
+}
+
+function ageText(d) {
+  if (d < 1) return "aujourd'hui";
+  if (d < 14) return `${d} jour${d > 1 ? "s" : ""}`;
+  if (d < 60) return `${Math.round(d / 7)} semaines`;
+  return `${Math.round(d / 30)} mois`;
+}
+
+function wireResult() {
+  document.querySelectorAll("#result .val").forEach(inp => inp.addEventListener("change", () => {
+    const n = inp.value === "" ? null : Number(inp.value);
+    if (n == null) delete state.overrides[inp.dataset.key]; else state.overrides[inp.dataset.key] = n;
+    render();
+  }));
+  document.querySelectorAll("#result .pick").forEach(inp => inp.addEventListener("change", () => pick(inp.dataset.kind, inp.value)));
+  $("copy")?.addEventListener("click", async e => {
+    try { await navigator.clipboard.writeText($("msg").value); e.target.textContent = "Copié"; } catch { $("msg").select(); }
+  });
+}
+
+function save(ev, neg) {
+  const s = state.specs;
+  record({
+    id: state.id, at: new Date().toISOString(), link: state.link, text: state.text.slice(0, 4000),
+    title: s.title, town: s.town, price: s.price, oldPrice: s.oldPrice, ageDays: s.ageDays,
+    cpu: s.cpu?.name || s.cpu?.unknown || null, gpu: s.gpu?.name || s.gpu?.unknown || null,
+    ram: s.ram?.gb || null, storage: (s.storage || []).map(d => `${d.gb} ${d.type}`).join(" + "),
+    value: ev.value, buy: ev.buy, verdict: ev.verdict.label, target: neg?.target?.offer ?? null, odds: neg?.odds ?? null,
+    overrides: state.overrides, cpuPick: state.cpuPick || null, gpuPick: state.gpuPick || null,
+  });
+}
+
+function renderRecent() {
+  const list = loadRecent().slice(0, 6);
+  $("recent-wrap").hidden = !list.length;
+  $("recent").innerHTML = list.map(e => `<li><button type="button" data-id="${esc(e.id)}">
+    <span class="r-score v-${verdictKey(e.buy)}">${e.buy ?? "?"}</span>
+    <span class="r-title">${esc(e.title || "Annonce")}</span>
+    <span class="r-meta">${money(e.price)}${e.town ? " · " + esc(e.town) : ""}</span></button></li>`).join("");
+  $("recent").querySelectorAll("button").forEach(b => b.addEventListener("click", () => reopen(b.dataset.id)));
+}
+
+const verdictKey = b => (b == null ? "unknown" : b >= 75 ? "buy" : b >= 60 ? "good" : b >= 45 ? "nego" : "pass");
+
+function reopen(id) {
+  const e = loadRecent().find(x => x.id === id);
+  if (!e) return;
+  $("text").value = e.text; $("link").value = e.link || ""; $("price").value = "";
+  analyse(e);
+  window.scrollTo({ top: $("result").offsetTop - 16, behavior: "smooth" });
+}
+
+// ---- admin --------------------------------------------------------------------
+// The password is checked by the server; it is kept in memory only while the dialog is open.
+
+let adminPass = null;
+const ADMIN_ERRORS = { unauthorized: "Mot de passe incorrect.", offline: "Le serveur ne répond pas. Réessaie dans un instant.", server: "Le serveur a eu un problème." };
+
+$("admin-open").addEventListener("click", () => {
+  $("admin-lock").hidden = false; $("admin-table").hidden = true; $("admin-err").hidden = true; $("admin-pass").value = "";
+  $("admin").showModal();
+});
+$("admin-cancel").addEventListener("click", () => $("admin").close());
+$("admin").addEventListener("close", () => { adminPass = null; });
+$("admin-lock").addEventListener("submit", async e => {
+  e.preventDefault();
+  try {
+    const list = await adminList($("admin-pass").value);
+    adminPass = $("admin-pass").value;
+    $("admin-lock").hidden = true;
+    renderAdmin(list);
+  } catch (err) {
+    $("admin-err").textContent = ADMIN_ERRORS[err.message] || ADMIN_ERRORS.server;
+    $("admin-err").hidden = false;
+  }
+});
+
+async function refreshAdmin(note) {
+  try { renderAdmin(await adminList(adminPass), note); }
+  catch (err) { renderAdmin([], ADMIN_ERRORS[err.message] || ADMIN_ERRORS.server); }
+}
+
+function renderAdmin(all, note) {
+  const t = $("admin-table");
+  t.hidden = false;
+  t.innerHTML = `
+    <div class="admin-head"><h2>Base de données · ${all.length} annonce${all.length > 1 ? "s" : ""}</h2>
+      <div class="row"><button type="button" class="ghost small" id="admin-export">Exporter JSON</button>
+      <label class="ghost small file-btn">Importer JSON<input type="file" id="admin-import" accept="application/json,.json" hidden /></label>
+      <button type="button" class="ghost small danger" id="admin-clear">Tout effacer</button>
+      <button type="button" class="ghost small" id="admin-close">Fermer</button></div></div>
+    ${note ? `<p class="err">${esc(note)}</p>` : ""}
+    <div class="scroll"><table class="admin">
+      <thead><tr><th>Date</th><th>Annonce</th><th>Ville</th><th class="num">Prix</th><th class="num">Valeur</th><th class="num">Score</th><th>Verdict</th><th class="num">Offre</th><th>CPU</th><th>GPU</th><th class="num">RAM</th><th>Stockage</th><th></th></tr></thead>
+      <tbody>${all.map(e => `<tr>
+        <td>${esc(new Date(e.at).toLocaleDateString("fr-CA"))}</td>
+        <td>${e.link ? `<a href="${esc(e.link)}" target="_blank" rel="noopener">${esc(e.title || "Annonce")}</a>` : esc(e.title || "Annonce")}</td>
+        <td>${esc(e.town || "")}</td><td class="num">${money(e.price)}</td><td class="num">${money(e.value)}</td>
+        <td class="num">${e.buy ?? "?"}</td><td>${esc(e.verdict)}</td><td class="num">${e.target ? money(e.target) : ""}</td>
+        <td>${esc(e.cpu || "")}</td><td>${esc(e.gpu || "")}</td><td class="num">${e.ram ? e.ram + " Go" : ""}</td><td>${esc(e.storage || "")}</td>
+        <td><button type="button" class="ghost small" data-del="${esc(e.id)}" aria-label="Supprimer">✕</button></td></tr>`).join("")}</tbody>
+    </table></div>`;
+  $("admin-close").addEventListener("click", () => $("admin").close());
+  $("admin-export").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(all, null, 2)], { type: "application/json" });
+    const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: "computah-recherches.json" });
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+  $("admin-import").addEventListener("change", async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    let list;
+    try { list = JSON.parse(await file.text()); if (!Array.isArray(list)) throw 0; }
+    catch { refreshAdmin("Ce fichier n'est pas un export computah valide."); return; }
+    try { const r = await adminImport(adminPass, list); refreshAdmin(`${r.imported} annonce(s) importée(s).`); }
+    catch (err) { refreshAdmin(ADMIN_ERRORS[err.message] || ADMIN_ERRORS.server); }
+  });
+  $("admin-clear").addEventListener("click", async () => {
+    if (!$("admin-clear").dataset.armed) { $("admin-clear").dataset.armed = "1"; $("admin-clear").textContent = "Confirmer l'effacement"; return; }
+    await adminClear(adminPass).catch(() => {});
+    refreshAdmin();
+  });
+  t.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", async () => {
+    await adminDelete(adminPass, b.dataset.del).catch(() => {});
+    refreshAdmin();
+  }));
+}
+
+renderRecent();

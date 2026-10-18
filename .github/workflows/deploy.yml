@@ -30,3 +30,32 @@ jobs:
         with:
           folder: resume/dist
           branch: gh-pages
+  # computah API on Cloudflare (server/). Needs the CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
+  # and COMPUTAH_ADMIN_PASSWORD repository secrets.
+  deploy-api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Apply database migrations
+        run: npx --yes wrangler@4.145.0 d1 migrations apply computah --remote
+
+      - name: Deploy worker
+        run: npx --yes wrangler@4.145.0 deploy
+
+      - name: Set admin password
+        env:
+          ADMIN_PASSWORD: ${{ secrets.COMPUTAH_ADMIN_PASSWORD }}
+        run: printf '%s' "$ADMIN_PASSWORD" | npx --yes wrangler@4.145.0 secret put ADMIN_PASSWORD
