@@ -4,32 +4,70 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>computah</title>
+<meta name="description" content="Colle une annonce de PC usagé : computah détecte les pièces, estime leur valeur et te dit si ça vaut la peine, et à quel prix négocier." />
 <meta name="theme-color" content="#070a12" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=JetBrains+Mono:wght@400&display=swap" />
-<style>
-  :root { color-scheme: dark; }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; min-height: 100%; }
-  body {
-    min-height: 100vh; display: grid; place-items: center; text-align: center; padding: 16px;
-    background:
-      radial-gradient(60% 50% at 30% 25%, rgba(70, 110, 190, 0.22), transparent 70%),
-      radial-gradient(50% 45% at 75% 80%, rgba(150, 90, 200, 0.16), transparent 70%),
-      #070a12;
-    color: #eef3ff; font-family: "Space Grotesk", system-ui, sans-serif;
-  }
-  h1 { margin: 0 0 8px; font-size: clamp(40px, 10vw, 88px); font-weight: 600; }
-  p { margin: 0 0 32px; color: rgba(238, 243, 255, 0.6); font: 400 15px/1.5 "JetBrains Mono", ui-monospace, monospace; }
-  a { color: #7cf0c5; font: 400 15px "JetBrains Mono", ui-monospace, monospace; }
-</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <script type="module" crossorigin src="/assets/computah-CmzeFvvm.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="stylesheet" crossorigin href="/assets/computah-BoyFWZCp.css">
 </head>
 <body>
-  <main>
+  <header class="top">
+    <a class="home" href="/">← bulles</a>
     <h1>computah</h1>
-    <p>bientôt · soon</p>
-    <a href="/">← retour aux bulles</a>
+    <p class="lede">Allo. Jvais calculer si c'est un bon deal pour toi. C'est du gossage, mais faut que tu copies la description donnée. Ok mici bye</p>
+  </header>
+
+  <main>
+    <form id="form" class="panel">
+      <label for="text">Texte de l'annonce</label>
+      <textarea id="text" rows="9" placeholder="Sur Marketplace : Ctrl+A puis Ctrl+C sur la page de l'annonce, et colle ici. Le titre seul fonctionne aussi."></textarea>
+      <div class="row">
+        <div class="field grow">
+          <label for="link">Lien (optionnel)</label>
+          <input id="link" type="url" placeholder="https://www.facebook.com/marketplace/item/…" />
+        </div>
+        <div class="field">
+          <label for="price">Prix demandé</label>
+          <input id="price" type="number" min="0" step="5" placeholder="auto" />
+        </div>
+      </div>
+      <div class="row actions">
+        <button type="submit" class="primary">Analyser</button>
+        <button type="button" id="example" class="ghost">Essayer un exemple</button>
+      </div>
+    </form>
+
+    <section id="result" hidden></section>
+
+    <section class="panel" id="recent-wrap" hidden>
+      <h2>Recherches récentes</h2>
+      <ul id="recent" class="recent"></ul>
+    </section>
   </main>
+
+  <footer class="foot">
+    <button type="button" id="admin-open" class="ghost small">Base de données</button>
+    <p>Scores de performance : <a href="https://www.cpubenchmark.net/" rel="noopener">PassMark CPU Mark</a> et <a href="https://www.videocardbenchmark.net/" rel="noopener">G3D Mark</a>, relevés le 18 octobre 2026. Les valeurs en dollars sont des estimations du marché usagé autour de Sherbrooke. Tes recherches restent dans ce navigateur.</p>
+  </footer>
+
+  <dialog id="admin">
+    <form id="admin-lock" method="dialog" class="lock">
+      <h2>Base de données</h2>
+      <label for="admin-pass">Mot de passe</label>
+      <input id="admin-pass" type="password" autocomplete="off" />
+      <p class="err" id="admin-err" hidden>Mot de passe incorrect.</p>
+      <div class="row actions">
+        <button type="submit" class="primary" value="unlock">Ouvrir</button>
+        <button type="button" class="ghost" id="admin-cancel">Fermer</button>
+      </div>
+    </form>
+    <div id="admin-table" hidden></div>
+  </dialog>
+
+  <datalist id="cpu-list"></datalist>
+  <datalist id="gpu-list"></datalist>
 </body>
 </html>
