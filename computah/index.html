@@ -10,13 +10,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
-  <script type="module" crossorigin src="/assets/computah-D5KqvGkr.js"></script>
+  <script type="module" crossorigin src="/assets/computah-aW3Lls_X.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="stylesheet" crossorigin href="/assets/computah-BNDPDDJl.css">
+  <link rel="stylesheet" crossorigin href="/assets/computah-CRDA8R2D.css">
 </head>
 <body>
   <header class="top">
-    <a class="home" href="/">← bulles</a>
+    <div class="top-bar">
+      <a class="home" href="/">← bulles</a>
+      <button type="button" id="admin-open" class="db-open">Toutes les annonces</button>
+    </div>
     <h1>computah</h1>
     <p class="lede">Allo. Jvais calculer si c'est un bon deal pour toi. C'est du gossage, mais faut que tu copies la description donnée. Ok mici bye</p>
   </header>
@@ -50,19 +53,18 @@
   </main>
 
   <footer class="foot">
-    <button type="button" id="admin-open" class="ghost small">Base de données</button>
     <p>Scores de performance : <a href="https://www.cpubenchmark.net/" rel="noopener">PassMark CPU Mark</a> et <a href="https://www.videocardbenchmark.net/" rel="noopener">G3D Mark</a>, relevés le 18 octobre 2026. Les valeurs en dollars sont des estimations du marché usagé autour de Sherbrooke. Tes recherches restent dans ce navigateur.</p>
   </footer>
 
-  <dialog id="admin">
-    <form id="admin-lock" method="dialog" class="lock">
-      <h2>Base de données</h2>
-      <label for="admin-pass">Mot de passe</label>
-      <input id="admin-pass" type="password" autocomplete="off" />
-      <p class="err" id="admin-err" hidden>Mot de passe incorrect.</p>
+  <dialog id="admin" class="sheet" aria-label="Toutes les annonces">
+    <div class="sheet-bubbles" id="sheet-bubbles" aria-hidden="true"></div>
+    <form id="admin-lock" class="login">
+      <h2 class="who" id="who">T'es qui toé?</h2>
+      <input id="admin-pass" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ton nom" aria-label="Ton nom" />
+      <p class="err" id="admin-err" role="alert" hidden></p>
       <div class="row actions">
-        <button type="submit" class="primary" value="unlock">Ouvrir</button>
-        <button type="button" class="ghost" id="admin-cancel">Fermer</button>
+        <button type="submit" class="primary">Entrer</button>
+        <button type="button" class="ghost" id="admin-cancel">Retour</button>
       </div>
     </form>
     <div id="admin-table" hidden></div>
