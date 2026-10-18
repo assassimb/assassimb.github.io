@@ -206,27 +206,66 @@ function reopen(id) {
 }
 
 // ---- admin --------------------------------------------------------------------
-// The password is checked by the server; it is kept in memory only while the dialog is open.
+// The name is checked by the server. Once it works it is remembered in this browser,
+// so coming back opens the listings straight away ("Sortir" forgets it).
 
+const WHO_KEY = "computah-who";
+const remembered = () => { try { return localStorage.getItem(WHO_KEY); } catch { return null; } };
+const remember = name => { try { name ? localStorage.setItem(WHO_KEY, name) : localStorage.removeItem(WHO_KEY); } catch { /* private mode */ } };
 let adminPass = null;
-const ADMIN_ERRORS = { unauthorized: "Mot de passe incorrect.", offline: "Le serveur ne répond pas. Réessaie dans un instant.", server: "Le serveur a eu un problème." };
+const ADMIN_ERRORS = { unauthorized: "Connais pas. Essaie encore.", offline: "Le serveur répond pas. Réessaie dans une minute.", server: "Le serveur a eu un problème." };
+const calm = matchMedia("(prefers-reduced-motion: reduce)");
 
-$("admin-open").addEventListener("click", () => {
-  $("admin-lock").hidden = false; $("admin-table").hidden = true; $("admin-err").hidden = true; $("admin-pass").value = "";
+// Each letter of the question gets its own span so it can float in one after the other.
+$("who").innerHTML = [...$("who").textContent].map((ch, i) =>
+  ch === " " ? " " : `<span style="--i:${i}">${esc(ch)}</span>`).join("");
+$("who").setAttribute("aria-label", "T'es qui toé?");
+
+// A handful of soap bubbles drifting up behind the login.
+$("sheet-bubbles").innerHTML = Array.from({ length: 14 }, (_, i) => {
+  const size = 30 + ((i * 37) % 110), left = (i * 53) % 100, delay = -((i * 7) % 18), dur = 14 + ((i * 5) % 12);
+  return `<span style="--s:${size}px;--x:${left}%;--d:${delay}s;--t:${dur}s;--h:${(i * 47) % 360}deg"></span>`;
+}).join("");
+
+function showLogin() {
+  $("admin").classList.remove("unlocked");
+  $("admin-lock").hidden = false; $("admin-lock").classList.remove("leaving");
+  $("admin-table").hidden = true; $("admin-err").hidden = true; $("admin-pass").value = "";
+  setTimeout(() => $("admin-pass").focus(), calm.matches ? 0 : 700);
+}
+
+function unlock(list) {
+  $("admin").classList.add("unlocked");
+  const show = () => { $("admin-lock").hidden = true; renderAdmin(list); };
+  if (calm.matches) return show();
+  $("admin-lock").classList.add("leaving");
+  setTimeout(show, 420);
+}
+
+$("admin-open").addEventListener("click", async () => {
   $("admin").showModal();
+  const name = remembered();
+  if (name) {
+    try { adminPass = name; unlock(await adminList(name)); return; }
+    catch (err) { if (err.message === "unauthorized") remember(null); }
+  }
+  showLogin();
 });
 $("admin-cancel").addEventListener("click", () => $("admin").close());
-$("admin").addEventListener("close", () => { adminPass = null; });
 $("admin-lock").addEventListener("submit", async e => {
   e.preventDefault();
+  const name = $("admin-pass").value.trim().toLowerCase();
+  if (!name) return;
   try {
-    const list = await adminList($("admin-pass").value);
-    adminPass = $("admin-pass").value;
-    $("admin-lock").hidden = true;
-    renderAdmin(list);
+    const list = await adminList(name);
+    adminPass = name;
+    remember(name);
+    unlock(list);
   } catch (err) {
     $("admin-err").textContent = ADMIN_ERRORS[err.message] || ADMIN_ERRORS.server;
     $("admin-err").hidden = false;
+    $("admin-lock").classList.remove("shake"); void $("admin-lock").offsetWidth; $("admin-lock").classList.add("shake");
+    $("admin-pass").select();
   }
 });
 
@@ -265,6 +304,7 @@ function renderAdmin(all, note) {
     <div class="admin-head"><h2 id="admin-count"></h2>
       <div class="row"><button type="button" class="ghost small" id="admin-export">Exporter JSON</button>
       <label class="ghost small file-btn">Importer JSON<input type="file" id="admin-import" accept="application/json,.json" hidden /></label>
+      <button type="button" class="ghost small" id="admin-logout">Sortir</button>
       <button type="button" class="ghost small" id="admin-close">Fermer</button></div></div>
     ${note ? `<p class="err">${esc(note)}</p>` : ""}
     <div class="row filters">
@@ -281,6 +321,7 @@ function renderAdmin(all, note) {
     </table></div>`;
 
   $("admin-close").addEventListener("click", () => $("admin").close());
+  $("admin-logout").addEventListener("click", () => { remember(null); adminPass = null; showLogin(); });
   $("admin-export").addEventListener("click", () => {
     const blob = new Blob([JSON.stringify(adminRows, null, 2)], { type: "application/json" });
     const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: "computah-recherches.json" });
@@ -325,8 +366,8 @@ function renderAdminRows() {
 
   const n = adminRows.length;
   $("admin-count").textContent = rows.length === n
-    ? `Base de données · ${n} annonce${n > 1 ? "s" : ""}`
-    : `Base de données · ${rows.length} sur ${n}`;
+    ? `Toutes les annonces · ${n}`
+    : `Toutes les annonces · ${rows.length} sur ${n}`;
   document.querySelectorAll("#admin-table [data-sort]").forEach(b => {
     const on = b.dataset.sort === view.sort;
     b.querySelector(".arrow").textContent = on ? (view.dir > 0 ? " ↑" : " ↓") : "";
