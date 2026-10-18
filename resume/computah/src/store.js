@@ -40,7 +40,6 @@ async function admin(password, path, init = {}) {
 
 export const adminList = pw => admin(pw, "/searches");
 export const adminDelete = (pw, id) => admin(pw, `/searches/${encodeURIComponent(id)}`, { method: "DELETE" });
-export const adminClear = pw => admin(pw, "/searches", { method: "DELETE" });
 export const adminImport = (pw, list) => admin(pw, "/import", {
   method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(list),
 });

@@ -3,7 +3,6 @@
 //   GET    /admin/searches       admin: every listing, newest first
 //   POST   /admin/import         admin: bulk upsert (array)
 //   DELETE /admin/searches/:id   admin: delete one
-//   DELETE /admin/searches       admin: delete all
 // Admin calls send "Authorization: Bearer <password>", checked against the ADMIN_PASSWORD secret.
 
 const MAX_ENTRY_BYTES = 20_000;
@@ -47,10 +46,6 @@ async function route(request, env) {
       let n = 0;
       for (const e of list) { try { await upsert(env, clean(e)); n++; } catch { /* skip malformed rows */ } }
       return json({ imported: n });
-    }
-    if (m === "DELETE" && pathname === "/admin/searches") {
-      await env.DB.prepare("DELETE FROM searches").run();
-      return json({ ok: true });
     }
     const del = pathname.match(/^\/admin\/searches\/([^/]+)$/);
     if (m === "DELETE" && del) {
