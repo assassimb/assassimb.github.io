@@ -2,7 +2,7 @@ import "./style.css";
 import { CPUS, GPUS } from "./benchmarks.js";
 import { parseListing } from "./parse.js";
 import { evaluate, negotiation } from "./score.js";
-import { loadRecent, record, adminList, adminDelete, adminImport } from "./store.js";
+import { loadRecent, record, adminList, adminDelete, adminImport, listingCount } from "./store.js";
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -382,4 +382,6 @@ function renderAdminRows() {
   }));
 }
 
+
+listingCount().then(n => { $("db-count").textContent = n == null ? "∞" : n; });
 renderRecent();

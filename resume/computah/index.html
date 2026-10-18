@@ -13,12 +13,14 @@
 </head>
 <body>
   <header class="top">
-    <div class="top-bar">
-      <a class="home" href="/">← bulles</a>
-      <button type="button" id="admin-open" class="db-open">Toutes les annonces</button>
-    </div>
+    <a class="home" href="/">← bulles</a>
     <h1>computah</h1>
     <p class="lede">Allo. Jvais calculer si c'est un bon deal pour toi. C'est du gossage, mais faut que tu copies la description donnée. Ok mici bye</p>
+    <button type="button" id="admin-open" class="db-open">
+      <span class="db-count" id="db-count" aria-hidden="true">…</span>
+      <span class="db-text"><b>Toutes les annonces</b><small>Les PC déjà analysés autour de Sherbrooke</small></span>
+      <span class="db-arrow" aria-hidden="true">→</span>
+    </button>
   </header>
 
   <main>
@@ -50,7 +52,7 @@
   </main>
 
   <footer class="foot">
-    <p>Scores de performance : <a href="https://www.cpubenchmark.net/" rel="noopener">PassMark CPU Mark</a> et <a href="https://www.videocardbenchmark.net/" rel="noopener">G3D Mark</a>, relevés le 18 octobre 2026. Les valeurs en dollars sont des estimations du marché usagé autour de Sherbrooke. Tes recherches restent dans ce navigateur.</p>
+    <p>Scores de performance : <a href="https://www.cpubenchmark.net/" rel="noopener">PassMark CPU Mark</a> et <a href="https://www.videocardbenchmark.net/" rel="noopener">G3D Mark</a>, relevés le 18 octobre 2026. Les valeurs en dollars sont des estimations du marché usagé autour de Sherbrooke. Chaque annonce analysée est gardée dans « Toutes les annonces ».</p>
   </footer>
 
   <dialog id="admin" class="sheet" aria-label="Toutes les annonces">

@@ -38,6 +38,10 @@ async function admin(password, path, init = {}) {
   return res.json();
 }
 
+export async function listingCount() {
+  try { const r = await fetch(`${API}/stats`); return r.ok ? (await r.json()).count : null; } catch { return null; }
+}
+
 export const adminList = pw => admin(pw, "/searches");
 export const adminDelete = (pw, id) => admin(pw, `/searches/${encodeURIComponent(id)}`, { method: "DELETE" });
 export const adminImport = (pw, list) => admin(pw, "/import", {

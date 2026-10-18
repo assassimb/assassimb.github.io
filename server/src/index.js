@@ -1,4 +1,5 @@
 // computah API (Cloudflare Worker + D1).
+//   GET    /stats                anyone: how many listings are stored
 //   POST   /searches             anyone: record one analysed listing
 //   GET    /admin/searches       admin: every listing, newest first
 //   POST   /admin/import         admin: bulk upsert (array)
@@ -29,6 +30,10 @@ async function route(request, env) {
   const m = request.method;
 
   if (m === "GET" && pathname === "/health") return json({ ok: true });
+  if (m === "GET" && pathname === "/stats") {
+    const row = await env.DB.prepare("SELECT COUNT(*) AS n FROM searches").first();
+    return json({ count: row.n });
+  }
   if (m === "POST" && pathname === "/searches") {
     await upsert(env, clean(await body(request)));
     return json({ ok: true });
