@@ -55,8 +55,8 @@ function NavBar({ lang, setLang, onJump, onExport }) {
   return (
     <header className="topbar">
       <div className="topbar-inner">
-        <a className="brand" href="#top" onClick={(e) => { e.preventDefault(); onJump("top"); }}>
-          <span className="brand-path">assim_b<span className="brand-ext">.cv</span></span>
+        <a className="brand" href="/" title={lang === "en" ? "Home" : "Accueil"}>
+          <span className="brand-path">assim</span>
         </a>
         <nav className="nav">
           {links.map(([id, label]) => (

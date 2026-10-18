@@ -75,7 +75,7 @@
   .topbar-inner { max-width: 1180px; margin: 0 auto; height: 60px; padding: 0 28px; display: flex; align-items: center; gap: 24px; }
   .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
   .brand-path { font-family: var(--font-mono); font-size: var(--fs-sm); font-weight: 500; color: var(--tx); letter-spacing: -0.2px; }
-  .brand-ext { color: var(--accent); }
+  a.brand:hover .brand-path { color: var(--accent); }
   .nav { display: flex; gap: 4px; margin-left: auto; }
   .nav a {
     font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--tx-2); text-decoration: none;
