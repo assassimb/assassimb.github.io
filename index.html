@@ -47,6 +47,9 @@
   }
   .bubble:focus-visible { box-shadow: 0 0 0 2px rgba(124, 240, 197, 0.85); }
   .bubble.gone span { opacity: 0; }
+  /* After a pop, the page dims out before the next one loads. */
+  canvas, .bubble, .sig { transition: opacity 0.35s ease-in 0.25s; }
+  body.leaving canvas, body.leaving .bubble, body.leaving .sig { opacity: 0; }
   .nojs { position: fixed; inset: 0; display: flex; gap: 32px; align-items: center; justify-content: center; }
   .nojs a { color: #eef3ff; font-size: 24px; }
 </style>
@@ -236,9 +239,10 @@
     const href = bubbles[i].el.getAttribute("href");
     if (newTab) { open(href, "_blank", "noopener"); return; }
     if (popped !== -1) return;
-    if (calm.matches) { location.href = href; return; }
+    // The pop plays even with reduced motion: it is short and it is the whole point of clicking.
     pop(i, lastGeo);
-    setTimeout(() => { location.href = href; }, 380);
+    document.body.classList.add("leaving");
+    setTimeout(() => { location.href = href; }, 650);
   }
 
   function hit(x, y, geo) {
