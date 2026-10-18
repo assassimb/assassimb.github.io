@@ -3,25 +3,337 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Assim B. | Développeur full-stack</title>
-<meta name="description" content="CV d'Assim B., développeur full-stack au Québec : Java/Spring, Angular, React, paiements et intelligence artificielle. Expériences chez Omnimed, GoTo et Décathlon Canada." />
-<meta name="theme-color" content="#080b12" />
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23080b12'/%3E%3Cpath d='M18 20 L34 32 L18 44' stroke='%234cc9a4' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='38' y='42' width='12' height='6' rx='2' fill='%234cc9a4'/%3E%3C/svg%3E" />
+<title>Assim B.</title>
+<meta name="description" content="Assim B., développeur full-stack au Québec. CV et projets." />
+<meta name="theme-color" content="#070a12" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='26' cy='34' r='20' fill='none' stroke='%237cf0c5' stroke-width='4'/%3E%3Ccircle cx='44' cy='24' r='14' fill='none' stroke='%23b48cff' stroke-width='4'/%3E%3C/svg%3E" />
 <link rel="canonical" href="https://assassimb.github.io/" />
-<meta property="og:type" content="profile" />
-<meta property="og:title" content="Assim B. | Développeur full-stack" />
-<meta property="og:description" content="Développeur full-stack et passionné d'intelligence artificielle, à l'aise du front-end au back-end comme du matériel embarqué." />
-<meta property="og:url" content="https://assassimb.github.io/" />
-<meta property="og:image" content="https://assassimb.github.io/me.png" />
-<meta name="twitter:card" content="summary" />
+<script>
+  /* Links shared before the CV moved to /cv/ carried ?lang=; keep them landing on the CV. */
+  if (new URLSearchParams(location.search).has("lang")) location.replace("/cv/" + location.search);
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
-  <script type="module" crossorigin src="/assets/index-sqt-ELVN.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-htNVT-Vy.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=JetBrains+Mono:wght@400&display=swap" />
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    overflow: hidden;
+    background:
+      radial-gradient(60% 50% at 30% 25%, rgba(70, 110, 190, 0.22), transparent 70%),
+      radial-gradient(50% 45% at 75% 80%, rgba(150, 90, 200, 0.16), transparent 70%),
+      #070a12;
+    color: #eef3ff;
+    font-family: "Space Grotesk", system-ui, sans-serif;
+  }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  .sig {
+    position: fixed; left: 20px; top: 16px; margin: 0;
+    font: 400 13px/1 "JetBrains Mono", ui-monospace, monospace;
+    color: rgba(238, 243, 255, 0.55); letter-spacing: 0.04em;
+  }
+  /* Real links for keyboard, screen readers and no-JS; the canvas does pointer hit-testing. */
+  .bubble {
+    position: fixed; left: 0; top: 0; border-radius: 50%;
+    pointer-events: none; color: inherit; text-decoration: none;
+    display: grid; place-items: center; outline: none;
+  }
+  .bubble span {
+    font-weight: 600; letter-spacing: 0.02em;
+    text-shadow: 0 1px 12px rgba(10, 20, 50, 0.6);
+    transition: opacity 0.12s;
+  }
+  .bubble:focus-visible { box-shadow: 0 0 0 2px rgba(124, 240, 197, 0.85); }
+  .bubble.gone span { opacity: 0; }
+  .nojs { position: fixed; inset: 0; display: flex; gap: 32px; align-items: center; justify-content: center; }
+  .nojs a { color: #eef3ff; font-size: 24px; }
+</style>
 </head>
-<body data-grid="on" data-glow="on">
-  <div id="root"></div>
+<body>
+  <p class="sig">Assim B.</p>
+  <canvas id="c" aria-hidden="true"></canvas>
+  <a class="bubble" id="b-cv" href="/cv/"><span>CV</span></a>
+  <a class="bubble" id="b-computah" href="/computah/"><span>computah</span></a>
+  <noscript><style>.bubble{display:none}</style><div class="nojs"><a href="/cv/">CV</a><a href="/computah/">computah</a></div></noscript>
+
+<script>
+(() => {
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const layer = document.createElement("canvas");
+  const lctx = layer.getContext("2d");
+  const calm = matchMedia("(prefers-reduced-motion: reduce)");
+
+  // A is the bigger bubble. Sizes are relative; layout() turns them into pixels.
+  const bubbles = [
+    { el: document.getElementById("b-cv"), size: 1, hue: 0, font: 0.42 },
+    { el: document.getElementById("b-computah"), size: 0.78, hue: 2.1, font: 0.155 },
+  ];
+  const FILM = ["#ff7ac8", "#ffd56e", "#7cf0c5", "#6ec8ff", "#b48cff", "#ff7ac8"];
+
+  let W = 0, H = 0, dpr = 1, k = 100, baseAngle = 0, landscape = true;
+  let popped = -1, particles = [], rings = [], hover = -1, mouse = null;
+
+  function layout() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    canvas.width = layer.width = Math.round(W * dpr);
+    canvas.height = layer.height = Math.round(H * dpr);
+    landscape = W >= H;
+    baseAngle = landscape ? -0.18 : 1.3;
+    const [a, b] = bubbles.map(x => x.size);
+    const span = a + Math.sqrt(a * a + b * b - a * b) + b; // A's far edge to B's far edge
+    const along = (landscape ? W : H) * 0.78, across = (landscape ? H : W) * 0.8;
+    k = Math.min(along / span, across / (2 * a), 280);
+  }
+
+  // Intro: both bubbles are blown up almost together (the small one a beat later) and wobble as they settle.
+  let intro = 0;
+  const INTRO = [{ at: 0.1, len: 1.0 }, { at: 0.22, len: 1.0 }];
+  const easeOut = p => 1 - Math.pow(1 - p, 3);
+  function inflate(i) {
+    const p = (intro - INTRO[i].at) / INTRO[i].len;
+    if (p <= 0) return 0;
+    if (p >= 1) return 1;
+    if (calm.matches) return easeOut(p); // reduced motion: a plain grow, no wobble
+    return 1 - Math.cos(p * Math.PI * 2.5) * Math.exp(-5 * p); // overshoots ~13%, then settles
+  }
+  const labelIn = i => Math.min(Math.max((intro - INTRO[i].at - INTRO[i].len * 0.55) / 0.35, 0), 1);
+
+  // Where everything is at time t (seconds). The pair drifts, sways and breathes a little;
+  // the centre distance always follows Plateau's 120° rule, so the bubbles stay stuck.
+  function geometry(t) {
+    const g = bubbles.map((bb, i) => {
+      bb.grow += ((hover === i ? 1.045 : 1) - bb.grow) * 0.12;
+      const breathe = 1 + 0.014 * Math.sin(t * (0.9 + i * 0.25) + i * 2);
+      return Math.max(0.5, bb.size * k * bb.grow * breathe * inflate(i));
+    });
+    const [ra, rb] = g;
+    const d = Math.sqrt(ra * ra + rb * rb - ra * rb);
+    const ang = baseAngle + 0.06 * Math.sin(t * 0.21);
+    const ux = Math.cos(ang), uy = Math.sin(ang);
+    const rise = calm.matches ? 0 : 1 - easeOut(Math.min(intro / 1.1, 1)); // the pair floats up into place
+    const cx = W / 2 + Math.sin(t * 0.33) * Math.min(W, H) * 0.012;
+    const cy = H / 2 + Math.sin(t * 0.27 + 1) * Math.min(W, H) * 0.016 + rise * H * 0.14;
+    const mid = (d + rb - ra) / 2;
+    const A = { x: cx - ux * mid, y: cy - uy * mid, r: ra };
+    const B = { x: A.x + ux * d, y: A.y + uy * d, r: rb };
+    // Shared wall: chord between the two contact points, bowed into the bigger bubble.
+    const along = (d * d + ra * ra - rb * rb) / (2 * d);
+    const h = Math.sqrt(Math.max(ra * ra - along * along, 0));
+    const M = { x: A.x + ux * along, y: A.y + uy * along };
+    const r3 = ra === rb ? Infinity : (ra * rb) / Math.abs(ra - rb);
+    const sag = isFinite(r3) ? r3 - Math.sqrt(r3 * r3 - h * h) : 0;
+    const ctrl = { x: M.x - ux * 2 * sag * Math.sign(ra - rb), y: M.y - uy * 2 * sag * Math.sign(ra - rb) };
+    return {
+      A, B, ux, uy, M, ctrl,
+      alphaA: Math.acos(Math.max(-1, Math.min(1, along / ra))),
+      alphaB: Math.acos(Math.max(-1, Math.min(1, (d - along) / rb))),
+      angle: ang,
+    };
+  }
+
+  function bubblePath(c, geo, i) {
+    const s = dpr, P = i === 0 ? geo.A : geo.B;
+    c.beginPath();
+    if (popped !== -1) { c.arc(P.x * s, P.y * s, P.r * s, 0, Math.PI * 2); return; }
+    const phi = geo.angle + (i === 0 ? 0 : Math.PI);
+    const a = i === 0 ? geo.alphaA : geo.alphaB;
+    c.arc(P.x * s, P.y * s, P.r * s, phi + a, phi + Math.PI * 2 - a);
+    c.quadraticCurveTo(geo.ctrl.x * s, geo.ctrl.y * s,
+      (P.x + P.r * Math.cos(phi + a)) * s, (P.y + P.r * Math.sin(phi + a)) * s);
+    c.closePath();
+  }
+
+  function film(c, x, y, rot) {
+    if (c.createConicGradient) {
+      const g = c.createConicGradient(rot, x, y);
+      FILM.forEach((col, j) => g.addColorStop(j / (FILM.length - 1), col));
+      return g;
+    }
+    const g = c.createLinearGradient(x - 100, y - 100, x + 100, y + 100);
+    FILM.forEach((col, j) => g.addColorStop(j / (FILM.length - 1), col));
+    return g;
+  }
+
+  function drawBubble(geo, i, t) {
+    const s = dpr, P = i === 0 ? geo.A : geo.B, x = P.x * s, y = P.y * s, r = P.r * s;
+
+    // Faint body, denser toward the rim like a real film.
+    const body = ctx.createRadialGradient(x, y, 0, x, y, r);
+    body.addColorStop(0, "rgba(255,255,255,0.015)");
+    body.addColorStop(0.8, "rgba(170,200,255,0.05)");
+    body.addColorStop(1, "rgba(210,230,255,0.16)");
+    bubblePath(ctx, geo, i); ctx.fillStyle = body; ctx.fill();
+
+    // Iridescent band: a rotating colour wheel with its centre punched out.
+    lctx.setTransform(1, 0, 0, 1, 0, 0);
+    lctx.clearRect(0, 0, layer.width, layer.height);
+    lctx.globalCompositeOperation = "source-over";
+    bubblePath(lctx, geo, i);
+    lctx.globalAlpha = 0.5;
+    lctx.fillStyle = film(lctx, x, y, t * 0.25 + bubbles[i].hue);
+    lctx.fill();
+    lctx.globalAlpha = 1;
+    lctx.globalCompositeOperation = "destination-out";
+    const hole = lctx.createRadialGradient(x, y, 0, x, y, r);
+    hole.addColorStop(0, "rgba(0,0,0,1)");
+    hole.addColorStop(0.6, "rgba(0,0,0,1)");
+    hole.addColorStop(0.97, "rgba(0,0,0,0)");
+    lctx.fillStyle = hole;
+    lctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+    ctx.drawImage(layer, 0, 0);
+
+    // Rim and wall lines.
+    bubblePath(ctx, geo, i);
+    ctx.lineWidth = Math.max(1, 1.1 * s);
+    ctx.strokeStyle = "rgba(235,245,255,0.5)";
+    ctx.stroke();
+
+    // Highlights, clipped to this bubble.
+    ctx.save();
+    bubblePath(ctx, geo, i); ctx.clip();
+    const hx = x + Math.cos(-2.3) * r * 0.5, hy = y + Math.sin(-2.3) * r * 0.5;
+    ctx.translate(hx, hy); ctx.rotate(-0.75);
+    const hl = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 0.24);
+    hl.addColorStop(0, "rgba(255,255,255,0.75)");
+    hl.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.scale(1, 0.5);
+    ctx.fillStyle = hl;
+    ctx.beginPath(); ctx.arc(0, 0, r * 0.24, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    ctx.save();
+    bubblePath(ctx, geo, i); ctx.clip();
+    ctx.beginPath();
+    ctx.arc(x + Math.cos(-1.95) * r * 0.76, y + Math.sin(-1.95) * r * 0.76, r * 0.035, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,255,255,0.7)"; ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x, y, r * 0.86, 0.35, 1.15);
+    ctx.lineWidth = r * 0.045; ctx.lineCap = "round";
+    ctx.strokeStyle = "rgba(255,255,255,0.18)"; ctx.stroke();
+    ctx.restore();
+  }
+
+  function pop(i, geo) {
+    const P = i === 0 ? geo.A : geo.B;
+    popped = i;
+    bubbles[i].el.classList.add("gone");
+    rings.push({ x: P.x, y: P.y, r: P.r, life: 0 });
+    for (let j = 0; j < 36; j++) {
+      const a = Math.random() * Math.PI * 2, sp = 90 + Math.random() * 220;
+      particles.push({
+        x: P.x + Math.cos(a) * P.r, y: P.y + Math.sin(a) * P.r,
+        vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 40,
+        r: 1 + Math.random() * 2.2, life: 0, max: 0.35 + Math.random() * 0.3,
+        col: FILM[j % (FILM.length - 1)],
+      });
+    }
+  }
+
+  function go(i, newTab) {
+    const href = bubbles[i].el.getAttribute("href");
+    if (newTab) { open(href, "_blank", "noopener"); return; }
+    if (popped !== -1) return;
+    if (calm.matches) { location.href = href; return; }
+    pop(i, lastGeo);
+    setTimeout(() => { location.href = href; }, 380);
+  }
+
+  function hit(x, y, geo) {
+    if (!geo) return -1;
+    const side = (x - geo.M.x) * geo.ux + (y - geo.M.y) * geo.uy; // < 0 is A's side of the wall
+    const inA = Math.hypot(x - geo.A.x, y - geo.A.y) < geo.A.r;
+    const inB = Math.hypot(x - geo.B.x, y - geo.B.y) < geo.B.r;
+    if (inA && inB) return side < 0 ? 0 : 1;
+    if (inA && popped !== 0) return 0;
+    if (inB && popped !== 1) return 1;
+    return -1;
+  }
+
+  let lastGeo = null, last = performance.now(), clock = 0;
+  function frame(now) {
+    const dt = Math.min((now - last) / 1000, 0.05); last = now;
+    if (!calm.matches) clock += dt;
+    intro += dt;
+    const geo = lastGeo = geometry(clock);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    bubbles.forEach((bb, i) => {
+      const P = i === 0 ? geo.A : geo.B;
+      // Labels sit a bit away from the shared wall, toward each bubble's open side.
+      const away = (i === 0 ? -0.1 : 0.16) * P.r;
+      const lx = P.x + geo.ux * away, ly = P.y + geo.uy * away;
+      bb.el.style.width = bb.el.style.height = P.r * 2 + "px";
+      bb.el.style.transform = `translate(${P.x - P.r}px, ${P.y - P.r}px)`;
+      bb.el.firstChild.style.transform = `translate(${lx - P.x}px, ${ly - P.y}px)`;
+      bb.el.firstChild.style.fontSize = Math.max(16, k * bb.font) + "px";
+      bb.el.style.opacity = labelIn(i);
+      if (i !== popped && inflate(i) > 0) drawBubble(geo, i, clock);
+    });
+
+    rings = rings.filter(rg => {
+      rg.life += dt;
+      const p = rg.life / 0.2;
+      if (p >= 1) return false;
+      ctx.beginPath();
+      ctx.arc(rg.x * dpr, rg.y * dpr, rg.r * (1 + 0.15 * p) * dpr, 0, Math.PI * 2);
+      ctx.lineWidth = 2 * dpr * (1 - p);
+      ctx.strokeStyle = `rgba(255,255,255,${0.7 * (1 - p)})`;
+      ctx.stroke();
+      return true;
+    });
+    particles = particles.filter(p => {
+      p.life += dt;
+      if (p.life > p.max) return false;
+      p.vy += 520 * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+      ctx.globalAlpha = 1 - p.life / p.max;
+      ctx.fillStyle = p.col;
+      ctx.beginPath(); ctx.arc(p.x * dpr, p.y * dpr, p.r * dpr, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+      return true;
+    });
+
+    if (mouse) {
+      hover = hit(mouse.x, mouse.y, geo);
+      canvas.style.cursor = hover === -1 ? "default" : "pointer";
+    }
+    requestAnimationFrame(frame);
+  }
+
+  canvas.addEventListener("pointermove", e => { mouse = { x: e.clientX, y: e.clientY }; });
+  canvas.addEventListener("pointerleave", () => { mouse = null; hover = -1; });
+  canvas.addEventListener("click", e => {
+    const i = hit(e.clientX, e.clientY, lastGeo);
+    if (i !== -1) go(i, e.ctrlKey || e.metaKey || e.shiftKey);
+  });
+  canvas.addEventListener("auxclick", e => {
+    const i = e.button === 1 ? hit(e.clientX, e.clientY, lastGeo) : -1;
+    if (i !== -1) go(i, true);
+  });
+  bubbles.forEach((bb, i) => {
+    bb.grow = 1;
+    bb.el.addEventListener("click", e => {
+      if (e.ctrlKey || e.metaKey || e.shiftKey) return; // let the browser open a tab
+      e.preventDefault();
+      go(i, false);
+    });
+    bb.el.addEventListener("focus", () => { hover = i; });
+    bb.el.addEventListener("blur", () => { if (hover === i) hover = -1; });
+  });
+
+  // Coming back with the back button restores the page from cache: put the bubble back.
+  addEventListener("pageshow", e => {
+    if (!e.persisted) return;
+    popped = -1; particles = []; rings = []; intro = 99;
+    bubbles.forEach(bb => bb.el.classList.remove("gone"));
+  });
+  addEventListener("resize", layout);
+  layout();
+  requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
