@@ -383,5 +383,8 @@ function renderAdminRows() {
 }
 
 
-listingCount().then(n => { $("db-count").textContent = n == null ? "∞" : n; });
+listingCount().then(n => {
+  $("db-count").textContent = n == null ? "∞" : n;
+  if (n != null) $("admin-open").setAttribute("aria-label", `Voir les ${n} annonces déjà analysées`);
+});
 renderRecent();
