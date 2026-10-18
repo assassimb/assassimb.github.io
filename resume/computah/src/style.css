@@ -209,6 +209,22 @@ dialog.sheet::backdrop { background: var(--bg); }
 .login.leaving { animation: pop-out 0.42s ease-in forwards; }
 @keyframes pop-out { 40% { transform: scale(1.06); opacity: 1; } to { transform: scale(0.6); opacity: 0; filter: blur(6px); } }
 
+/* A Bernese GIF in an iridescent frame doing laps around the question (moved by JS). */
+.dog-orbit { position: absolute; inset: 0; pointer-events: none; }
+.dog {
+  position: absolute; left: 50%; top: 50%; width: 224px; height: 126px; margin: -63px 0 0 -112px;
+  border-radius: 28px; overflow: hidden; pointer-events: none; will-change: transform;
+  border: 3px solid transparent;
+  background: conic-gradient(from 200deg, #ff7ac8, #ffd56e, #7cf0c5, #6ec8ff, #b48cff, #ff7ac8) border-box;
+  box-shadow: 0 0 24px rgba(124, 240, 197, 0.25), 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.dog img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 25px; }
+.giphy-credit { position: absolute; right: 16px; bottom: 12px; font: 400 12px var(--mono); color: var(--mute); text-decoration: none; z-index: 2; }
+.giphy-credit:hover { color: var(--accent); }
+/* Title sits between the dog's far (1) and near (3) side; the controls always stay on top. */
+.login .who { position: relative; z-index: 2; }
+.login input, .login .actions, .login .err { position: relative; z-index: 4; }
+
 #admin-table { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 24px 16px 40px; animation: fade-up 0.45s ease-out; }
 
 @media (prefers-reduced-motion: reduce) {

@@ -227,11 +227,30 @@ $("sheet-bubbles").innerHTML = Array.from({ length: 14 }, (_, i) => {
   return `<span style="--s:${size}px;--x:${left}%;--d:${delay}s;--t:${dur}s;--h:${(i * 47) % 360}deg"></span>`;
 }).join("");
 
+// Laps around the question on an ellipse seen in perspective: on the far side (top) the dog is
+// smaller and passes behind the text, on the near side it is bigger and in front.
+let dogFrame = 0;
+function runDog() {
+  cancelAnimationFrame(dogFrame);
+  const dog = $("dog"), t0 = performance.now();
+  const step = now => {
+    if (!$("admin").open || $("admin-lock").hidden) return;
+    const a = ((now - t0) / 6000) * Math.PI * 2;
+    const rx = Math.min(innerWidth * 0.36, 460), ry = Math.min(innerHeight * 0.26, 220);
+    const depth = (Math.sin(a) + 1) / 2;
+    dog.style.transform = `translate(${Math.cos(a) * rx}px, ${Math.sin(a) * ry}px) scale(${0.65 + depth * 0.5})`;
+    dog.style.zIndex = depth > 0.5 ? 3 : 1;
+    dogFrame = requestAnimationFrame(step);
+  };
+  dogFrame = requestAnimationFrame(step);
+}
+
 function showLogin() {
   $("admin").classList.remove("unlocked");
   $("admin-lock").hidden = false; $("admin-lock").classList.remove("leaving");
   $("admin-table").hidden = true; $("admin-err").hidden = true; $("admin-pass").value = "";
   setTimeout(() => $("admin-pass").focus(), calm.matches ? 0 : 700);
+  runDog();
 }
 
 function unlock(list) {
