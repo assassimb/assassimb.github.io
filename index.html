@@ -51,6 +51,8 @@
   /* After a pop, the page dims out before the next one loads. */
   canvas, .bubble, .sig { transition: opacity 0.35s ease-in 0.25s; }
   body.leaving canvas, body.leaving .bubble, body.leaving .sig { opacity: 0; }
+  /* Back from a page: snap back to visible instead of fading in over the replayed intro. */
+  body.back canvas, body.back .bubble, body.back .sig { transition: none; }
   .nojs { position: fixed; inset: 0; display: flex; gap: 32px; align-items: center; justify-content: center; }
   .nojs a { color: #eef3ff; font-size: 24px; }
 </style>
@@ -329,11 +331,15 @@
     bb.el.addEventListener("blur", () => { if (hover === i) hover = -1; });
   });
 
-  // Coming back with the back button restores the page from cache: put the bubble back.
+  // Coming back with the back button restores the page from cache, still dimmed and popped:
+  // undo the exit and replay the intro, as a reload would.
   addEventListener("pageshow", e => {
     if (!e.persisted) return;
-    popped = -1; particles = []; rings = []; intro = 99;
-    bubbles.forEach(bb => bb.el.classList.remove("gone"));
+    popped = -1; particles = []; rings = []; intro = 0; hover = -1; mouse = null;
+    bubbles.forEach(bb => { bb.grow = 1; bb.el.classList.remove("gone"); });
+    document.body.classList.add("back");
+    document.body.classList.remove("leaving");
+    requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.remove("back")));
   });
   addEventListener("resize", layout);
   layout();
