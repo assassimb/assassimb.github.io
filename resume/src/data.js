@@ -16,8 +16,8 @@ export const RESUME = {
     email: "assassimb@gmail.com",
     location: { fr: "Québec, Canada", en: "Québec, Canada" },
     tagline: {
-      fr: "Développeur full-stack (Java/Spring, TypeScript/Angular, React) : systèmes de paiement, services Kafka et outils d'agents IA pour mon équipe.",
-      en: "Full-stack developer (Java/Spring, TypeScript/Angular, React) shipping payment systems, Kafka services and AI agent tooling for my team."
+      fr: "Développeur full-stack depuis près de 3 ans sur un DME SaaS utilisé par 250 établissements de santé et 7 700 utilisateurs : interfaces TypeScript (Angular, React), microservices Spring Boot et API REST, événements Kafka, CI/CD et développement assisté par l'IA (Claude Code).",
+      en: "Full-stack developer with nearly 3 years on a SaaS EMR used by 250 healthcare institutions and 7,700 users: TypeScript front-ends (Angular, React), Spring Boot microservices and RESTful APIs, Kafka events, CI/CD, and AI-assisted development with Claude Code."
     }
   },
 
@@ -63,8 +63,8 @@ export const RESUME = {
     tools: { fr: "Outils logiciels", en: "Software tools" },
     exportLabel: { fr: "PDF", en: "PDF" },
     exportHint: {
-      fr: "Exporter un CV condensé d'une page : choisir « Enregistrer au format PDF » comme destination",
-      en: "Export a condensed one-page résumé: choose “Save as PDF” as the destination"
+      fr: "Exporter un CV de deux pages : choisir « Enregistrer au format PDF » comme destination",
+      en: "Export a two-page résumé: choose “Save as PDF” as the destination"
     }
   },
 
@@ -90,57 +90,59 @@ export const RESUME = {
       period: { fr: "01/2024 – Présent", en: "01/2024 – Present" },
       location: { fr: "Québec, Canada (Hybride)", en: "Québec, Canada (Hybrid)" },
       type: { fr: "Emploi", en: "Employment" },
-      /* One-page preset: always keep the Kafka bullet (most in-demand skill)
-         and the transaction-volume outcome. See `pinned` in condense.js. */
-      pinned: ["Kafka", "millions", "12", "Claude Code", "incidents", "pull requests"],
+      /* The PDF prints every responsibility, in authored order, and skips
+         `impact`: the impact list restates the PAX and feature-flag bullets,
+         and the scorer picked different subsets per language. The
+         transaction-volume figure lives in the PAX bullet instead.
+         See `printImpact` in condense.js. */
+      printImpact: false,
       summary: {
-        fr: "Écosystème de facturation et de paiement d'un DME : événements Kafka, terminaux PAX et paiements en ligne dans 12+ cliniques, traitant des millions de dollars par année.",
-        en: "Billing and payment ecosystem of an EMR: Kafka events, PAX terminals and online payments across 12+ clinics, processing millions of dollars a year."
+        fr: "Facturation, paiements et préautorisation des rendez-vous d'un DME SaaS : microservices Spring Boot, API REST, événements Kafka, interfaces Angular/TypeScript et terminaux de paiement déployés dans 12+ cliniques, traitant des millions de dollars par année.",
+        en: "Billing, payments and appointment pre-authorization in a SaaS EMR: Spring Boot microservices, REST APIs, Kafka events, Angular/TypeScript front-ends and payment terminals rolled out to 12+ clinics, processing millions of dollars a year."
       },
       stack: [
-        "Spring Boot",
-        "Kafka",
-        "Angular",
         "TypeScript",
-        "Kubernetes",
-        "Claude Code",
+        "Angular",
         "Java",
+        "Spring Boot",
+        { fr: "API REST", en: "REST APIs" },
+        { fr: "Microservices", en: "Microservices" },
+        "Kafka",
+        "Kubernetes",
+        "CI/CD",
+        "Claude Code",
         { fr: "Terminaux PAX", en: "PAX terminals" },
         "Feature flags",
         { fr: "Tests unitaires & e2e", en: "Unit & e2e tests" }
       ],
       overview: {
-        fr: "Au sein de l'équipe facturation d'Omnimed, j'ai travaillé sur l'écosystème de paiement d'un dossier médical électronique utilisé par des cliniques. Le travail couvre toute la chaîne, du back-end Java/Spring au front-end Angular, dans une architecture où les services communiquent par événements Kafka et sont déployés sur Kubernetes. Le résultat : plus de 12 cliniques encaissent de façon fiable et conforme, avec des transactions qui totalisent plusieurs millions de dollars par année, le tout en faisant évoluer une logique de facturation héritée sans interrompre le service.",
-        en: "Within Omnimed's billing team, I worked on the payment ecosystem of an electronic medical record used by clinics. The work spans the full chain, from the Java/Spring back-end to the Angular front-end, in an architecture where services communicate through Kafka events and are deployed on Kubernetes. The result: 12+ clinics collect payments reliably and compliantly, with transactions adding up to millions of dollars a year, all while evolving legacy billing logic without disrupting service."
+        fr: "Au sein de l'équipe facturation d'Omnimed, j'ai travaillé sur l'écosystème de paiement d'un dossier médical électronique SaaS utilisé par des cliniques. Le travail couvre toute la chaîne, des microservices Java/Spring Boot et leurs API REST au front-end Angular/TypeScript, dans une architecture où les services communiquent par événements Kafka et sont déployés sur Kubernetes par des pipelines CI/CD. Le résultat : plus de 12 cliniques encaissent de façon fiable et conforme, avec des transactions qui totalisent plusieurs millions de dollars par année, le tout en faisant évoluer une logique de facturation héritée sans interrompre le service.",
+        en: "Within Omnimed's billing team, I worked on the payment ecosystem of a SaaS electronic medical record used by clinics. The work spans the full chain, from Java/Spring Boot microservices and their REST APIs to the Angular/TypeScript front-end, in an architecture where services communicate through Kafka events and are deployed on Kubernetes through CI/CD pipelines. The result: 12+ clinics collect payments reliably and compliantly, with transactions adding up to millions of dollars a year, all while evolving legacy billing logic without disrupting service."
       },
       responsibilities: {
         fr: [
-          "Intégrer les terminaux de paiement PAX à la plateforme web d'Omnimed pour permettre la création de paiements sans fil directement dans l'application.",
-          "Automatiser le retour des données de transaction du terminal vers le système.",
-          "Développer et intégrer les paiements en ligne SafeCharge (Nuvei), avec des champs de carte conformes PCI via iframe et la gestion des codes d'erreur de la passerelle.",
-          "Développer des producteurs et consommateurs Kafka pour propager les données de transaction et synchroniser les services de facturation de façon asynchrone.",
-          "Mettre en place des architectures à feature flags pour déployer progressivement les fonctionnalités à des clients ciblés.",
-          "Contribuer à la refonte de l'écosystème de facturation en implémentant un modèle de prépaiement par lots (services prépayés consommés sur de futures factures).",
-          "Travailler sur les bases de code back-end Java/Spring et front-end Angular : ajout de fonctionnalités et refactorisation de la logique de facturation héritée.",
-          "Corriger les tests de bout en bout instables et ajouter de la couverture unitaire et e2e sur le code de facturation et de paiement.",
-          "Créer des skills Claude Code utilisés par mon équipe (dev, Jira et docs, analyse de logs, facturation) et former l'équipe au développement assisté par IA.",
-          "Agir comme contact technique principal auprès de Nuvei et des cliniques, et résoudre les incidents de paiement en production.",
-          "Intégrer et accompagner 2 à 3 développeurs, et réviser régulièrement les pull requests de l'équipe.",
-          "Piloter l'intégration de plus de 12 cliniques de bout en bout depuis la toute première : configuration PAXSTORE, déploiements sur site jusqu'à 4 terminaux, liaison avec Nuvei et documentation de support."
+          "Développer des interfaces Angular et TypeScript réactives pour la facturation, les paiements et les préautorisations d'un DME SaaS utilisé par 250 établissements de santé et 7 700 utilisateurs.",
+          "Concevoir et développer des points de terminaison d'API REST dans des microservices Spring Boot (transactions en ligne, intégrations de paiement, factures, rapports, webhooks du fournisseur de paiement), avec contrats OpenAPI.",
+          "Développer les paiements liés à l'agenda (18 900 rendez-vous par jour) : capture des retenues de carte prises à la réservation en ligne, association au rendez-vous du patient, libération automatique si le rendez-vous est annulé.",
+          "Développer des producteurs et consommateurs Kafka pour que la facturation réagisse en quasi temps réel aux événements de rendez-vous et de transaction entre microservices.",
+          "Intégrer les terminaux de paiement PAX et les paiements en ligne Nuvei au DME, avec champs de carte conformes PCI et gestion des erreurs de la passerelle ; ces paiements totalisent des millions de dollars par année.",
+          "Piloter le déploiement des terminaux dans 12+ cliniques depuis la première : configuration, installations sur site (jusqu'à 4 terminaux), coordination avec le fournisseur, documentation ; contact technique principal des incidents de paiement en production.",
+          "Livrer par des pipelines CI/CD Jenkins (tests unitaires, d'intégration et e2e, analyse SonarQube) vers Kubernetes avec l'infrastructure as code de l'équipe (Kustomize, skaffold) ; stabiliser les tests e2e instables et ajouter de la couverture de tests.",
+          "Aider à migrer l'API de facturation vers Spring Boot 3, refactoriser la logique de facturation héritée, implémenter un modèle de prépaiement par lots et des feature flags pour des déploiements progressifs.",
+          "Créer des skills et plugins Claude Code utilisés par mon équipe (flux de développement, Jira et documentation, analyse de logs, vidéos QA) et former mes collègues au développement assisté par l'IA générative.",
+          "Intégrer et accompagner un nouveau développeur, et réviser régulièrement les pull requests de l'équipe."
         ],
         en: [
-          "Integrated PAX payment terminals into the Omnimed web platform to enable wireless, in-app payment creation.",
-          "Automated the return of terminal transaction data back into the system.",
-          "Developed and integrated SafeCharge (Nuvei) online payments, with PCI-compliant card fields via iframe and gateway error-code handling.",
-          "Built Kafka producers and consumers to propagate transaction data and synchronize billing services asynchronously.",
-          "Implemented feature-flag architectures to progressively roll out functionality to selected clients.",
-          "Contributed to the redesign of the billing ecosystem with a bundle prepayment model (prepaid services consumed across future invoices).",
-          "Worked across the Java/Spring back-end and Angular front-end: adding features and refactoring legacy billing logic.",
-          "Fixed flaky end-to-end tests and added unit and e2e coverage to billing and payment code.",
-          "Built Claude Code skills and plugins my team uses (dev workflows, Jira tickets and docs, log analysis, billing context) and taught the team AI-assisted development.",
-          "Served as main technical contact for Nuvei and the clinics, and resolved production payment incidents.",
-          "Onboarded and mentored 2–3 developers and regularly reviewed the team's pull requests.",
-          "Drove 12+ clinic integrations end to end, starting with the very first one: PAXSTORE configuration, on-site deployments of up to 4 terminals, Nuvei liaison and support documentation."
+          "Built responsive Angular and TypeScript interfaces for invoicing, payments and pre-authorizations in a SaaS EMR used by 250 healthcare institutions and 7,700 users.",
+          "Designed and built RESTful API endpoints in Spring Boot microservices (online transactions, payment integrations, invoices, reports, payment-provider webhooks), with OpenAPI contracts.",
+          "Built payments tied to appointment scheduling (18,900 appointments a day): capturing card holds taken at online booking, tying them to the patient's appointment, releasing them when it is cancelled.",
+          "Built Kafka producers and consumers so billing reacts in near real time to appointment and transaction events across microservices.",
+          "Integrated PAX payment terminals and Nuvei online payments into the EMR, with PCI-compliant card fields and gateway error handling; these payments now add up to millions of dollars a year.",
+          "Led the terminal rollout in 12+ clinics from the very first one: setup, on-site installs of up to 4 terminals, provider coordination and support docs; main technical contact for production payment incidents.",
+          "Shipped through Jenkins CI/CD pipelines (unit, integration and e2e tests, SonarQube gates) to Kubernetes using the team's infrastructure as code (Kustomize, skaffold); stabilized flaky e2e tests and added coverage.",
+          "Helped migrate the billing API to Spring Boot 3, refactored legacy billing logic, and implemented a bundle prepayment model and feature flags for progressive rollouts.",
+          "Built Claude Code skills and plugins my team uses (dev workflows, Jira and docs, log analysis, QA videos) and coached teammates on AI-assisted development with GenAI tools.",
+          "Onboarded and mentored a new developer and regularly reviewed the team's pull requests."
         ]
       },
       impact: {
@@ -162,45 +164,41 @@ export const RESUME = {
       id: "goto",
       org: "GoTo",
       orgInitial: "G",
-      role: { fr: "Développeur full-stack", en: "Full-stack developer" },
+      role: { fr: "Développeur front-end", en: "Front-end developer" },
       period: "07/2022 – 08/2023",
       location: { fr: "Québec, Canada (Télétravail)", en: "Québec, Canada (Remote)" },
       type: { fr: "Stage", en: "Internship" },
+      /* Front-end only: no back-end or AWS work, so neither is claimed here.
+         The React + TypeScript bullet reads as a stack list to the scorer and
+         loses; it is the keyword this role exists to show. */
+      pinned: ["React et TypeScript", "React and TypeScript", "Robot Framework"],
       summary: {
-        fr: "Interfaces React et solutions infonuagiques au sein d'une architecture microservices sur AWS, avec une forte culture de tests.",
-        en: "React interfaces and cloud solutions within a microservices architecture on AWS, with a strong testing culture."
+        fr: "Interfaces React et TypeScript pour une entreprise SaaS, avec une forte culture de tests.",
+        en: "React and TypeScript interfaces at a SaaS company, with a strong testing culture."
       },
-      stack: ["React", "TypeScript", "Jest", "Robot Framework", "Microservices", "AWS", "JIRA"],
+      stack: ["React", "TypeScript", "JavaScript", { fr: "API REST", en: "REST APIs" }, "Jest", "Robot Framework", "JIRA"],
       overview: {
-        fr: "Chez GoTo, entreprise technologique au rythme soutenu, je me suis spécialisé dans le développement d'interfaces conviviales en React. Le rôle demandait de s'intégrer rapidement à une architecture microservices déployée sur AWS et de soutenir une culture de qualité forte, où chaque fonctionnalité était couverte par des tests unitaires et de bout en bout.",
-        en: "At GoTo, a fast-paced tech company, I specialized in building user-friendly interfaces in React. The role meant quickly fitting into a microservices architecture deployed on AWS and upholding a strong quality culture, where every feature was covered by unit and end-to-end tests."
+        fr: "Chez GoTo, entreprise SaaS au rythme soutenu, j'étais développeur front-end : je développais des interfaces conviviales en React et TypeScript, branchées sur les API REST du back-end, dans une culture de qualité forte où chaque fonctionnalité était couverte par des tests unitaires et de bout en bout.",
+        en: "At GoTo, a fast-paced SaaS company, I was a front-end developer: I built user-friendly interfaces in React and TypeScript on top of the back-end's REST APIs, in a strong quality culture where every feature was covered by unit and end-to-end tests."
       },
       responsibilities: {
         fr: [
-          "Développer des interfaces utilisateur conviviales avec React et TypeScript.",
-          "Assurer la qualité du code avec des tests unitaires et de bout en bout (Jest et Robot Framework).",
-          "Gérer les tâches tout au long du cycle de vie des sprints avec JIRA.",
-          "S'intégrer rapidement à une architecture microservices et aux flux de travail dans un environnement AWS.",
-          "Contribuer au développement de solutions évolutives et efficaces dans un contexte technologique rapide."
+          "Développer des interfaces utilisateur réactives et évolutives avec React et TypeScript, qui consomment les API REST du back-end.",
+          "Couvrir les fonctionnalités de tests unitaires et de bout en bout (Jest, Robot Framework).",
+          "Livrer en sprints agiles avec suivi dans JIRA."
         ],
         en: [
-          "Built user-friendly interfaces with React and TypeScript.",
-          "Ensured code quality with unit and end-to-end tests (Jest and Robot Framework).",
-          "Managed tasks throughout the sprint lifecycle with JIRA.",
-          "Quickly adapted to a microservices architecture and workflows in an AWS environment.",
-          "Contributed to building scalable, efficient solutions in a fast-paced, tech-driven setting."
+          "Built responsive, scalable user interfaces with React and TypeScript, consuming the back-end's REST APIs.",
+          "Covered features with unit and end-to-end tests (Jest, Robot Framework).",
+          "Delivered in agile sprints tracked in JIRA."
         ]
       },
       impact: {
         fr: [
-          "Fonctionnalités React livrées avec une couverture de tests unitaires et de bout en bout.",
-          "Adaptation rapide à une architecture microservices sur AWS.",
-          "Contribution à des solutions évolutives dans un environnement à cadence élevée."
+          "Fonctionnalités React livrées avec une couverture de tests unitaires et de bout en bout."
         ],
         en: [
-          "React features delivered with unit and end-to-end test coverage.",
-          "Fast ramp-up on a microservices architecture running on AWS.",
-          "Contributed to scalable solutions in a high-cadence environment."
+          "React features delivered with unit and end-to-end test coverage."
         ]
       }
     },
@@ -216,6 +214,7 @@ export const RESUME = {
         fr: "Application web de recommandation de tailles de vêtements à partir de deux photos, par vision par ordinateur.",
         en: "Web app that recommends clothing sizes from two photos using computer vision."
       },
+      pinned: ["VueJS", "modèle d'intelligence artificielle", "Applied an AI model", "4 mois", "4 months"],
       stack: ["VueJS", "Python", { fr: "Vision par ordinateur", en: "Computer vision" }, { fr: "Détection de pose", en: "Pose detection" }, "REST API", "Node.js"],
       overview: {
         fr: "Au sein de l'équipe d'intelligence artificielle de Décathlon Canada, j'ai conçu une application web permettant de recommander la bonne taille de vêtement à un client à partir de deux simples photos. Le défi : transformer des images prises à la maison en mesures corporelles fiables, sans matériel spécialisé, tout en gardant une expérience client claire et rapide.",
@@ -262,6 +261,7 @@ export const RESUME = {
       period: "05/2021 – 08/2021",
       location: { fr: "Télétravail", en: "Remote" },
       type: { fr: "Stage", en: "Internship" },
+      pinned: ["MVC", "Bulma", "Traiter les webhooks", "Processed webhooks"],
       summary: {
         fr: "Nouvelles fonctionnalités web pour une start-up de livraison, en PHP / CodeIgniter avec gestion de paiements par webhook.",
         en: "New web features for a delivery start-up in PHP / CodeIgniter, including webhook-driven payments."
@@ -312,9 +312,9 @@ export const RESUME = {
       period: "08/2020 – 12/2020",
       location: { fr: "Québec, Canada", en: "Québec, Canada" },
       type: { fr: "Stage", en: "Internship" },
-      /* This entry prints a single bullet under the one-page preset; pin the
+      /* This entry prints few bullets under the PDF presets; pin the
          one that describes the work rather than the toolchain. See condense.js. */
-      pinned: ["comportement natif de SuiteCRM", "Modified SuiteCRM's native behaviour"],
+      pinned: ["comportement natif de SuiteCRM", "Modified SuiteCRM's native behaviour", "UX/UI", "dépôt GitLab", "GitLab repository"],
       summary: {
         fr: "Résolution d'irritants de navigation sur un progiciel CRM (SuiteCRM) pour l'administration des dossiers étudiants.",
         en: "Fixing navigation pain points on a CRM platform (SuiteCRM) for student-record administration."
@@ -456,6 +456,7 @@ export const RESUME = {
         fr: "Jeu vidéo tour par tour manipulé par la voix humaine, avec détection de phonèmes et liaison à une carte FPGA.",
         en: "Turn-based video game controlled by the human voice, with phoneme detection and FPGA linkage."
       },
+      pinned: ["phonèmes distincts", "distinct phonemes", "carte FPGA", "FPGA board"],
       stack: ["C++", "QT", "FPGA", { fr: "Traitement du signal", en: "Signal processing" }, { fr: "Détection de phonèmes", en: "Phoneme detection" }],
       overview: {
         fr: "Avec une équipe de huit étudiants, nous avons conçu un jeu vidéo entièrement manipulé par la voix. Le cœur du projet était le traitement du signal : concevoir des filtres capables de distinguer des phonèmes prononcés par le joueur, puis traduire ces commandes vocales en actions dans un jeu tour par tour.",
@@ -467,7 +468,7 @@ export const RESUME = {
           "Concevoir des filtres permettant de détecter des phonèmes distincts.",
           "Créer un jeu vidéo de type tour par tour avec de multiples personnages en C++.",
           "Programmer une interface graphique avec images pour le jeu vidéo avec QT.",
-          "Réaliser la liaison du code avec une carte FPGA."
+          "Relier le code à une carte FPGA."
         ],
         en: [
           "Designed, in a team of 8 students, a video game controlled by the human voice.",
@@ -502,6 +503,7 @@ export const RESUME = {
         fr: "Automobile miniature autonome de déneigement à capteurs de proximité, contrôle PID et pièces 3D conçues en SOLIDWORKS.",
         en: "Autonomous miniature snow-clearing car with proximity sensors, PID control and 3D parts designed in SOLIDWORKS."
       },
+      pinned: ["PID pour", "PID controller for", "SOLIDWORKS."],
       stack: ["ArduinoX", "C", { fr: "Contrôle PID", en: "PID control" }, "SOLIDWORKS", { fr: "Capteurs", en: "Sensors" }],
       overview: {
         fr: "Projet mêlant logiciel, électronique et mécanique : une équipe de huit étudiants a conçu une automobile miniature capable de déneiger de façon autonome. Le robot lisait son environnement grâce à des capteurs de proximité et se déplaçait avec précision grâce à un contrôleur PID, le tout sur un châssis et une pelle modélisés en 3D.",
@@ -537,8 +539,19 @@ export const RESUME = {
   ],
 
   knowledge: {
+    /* The PDF prints these grouped runs instead of the two flat lists below,
+       which the site still uses. Grouped so a recruiter's keyword pass lands
+       on the right line. */
+    groups: [
+      { label: { fr: "Langages", en: "Languages" }, items: ["Java", "TypeScript", "JavaScript", "SQL", "Python", "PHP", "C", "C#"] },
+      { label: { fr: "Front-end", en: "Frontend" }, items: ["Angular", "React", "VueJS", "RxJS / NGXS", "HTML / CSS"] },
+      { label: { fr: "Back-end et API", en: "Backend & APIs" }, items: ["Spring Boot", "REST / OpenAPI", "Kafka", "Hibernate", "PostgreSQL", "Node.js / npm", "Webhooks"] },
+      { label: { fr: "Cloud et DevOps", en: "Cloud & DevOps" }, items: ["Kubernetes", "Docker", "Kustomize", "skaffold", "Jenkins CI/CD", "GitHub Actions", "SonarQube", "Datadog", "Nx", "Maven", "Git", "Linux"] },
+      { label: { fr: "Tests", en: "Testing" }, items: ["JUnit / Mockito", "Jest", "Cucumber", "Robot Framework"] },
+      { label: { fr: "Outils d'IA", en: "AI tools" }, items: ["Claude Code (skills, plugins)", { fr: "développement assisté par l'IA générative", en: "GenAI-assisted development" }] }
+    ],
     languages: ["Java", "TypeScript", "JavaScript", "SQL", "Python", "C#", "C", "PHP", "Angular", "React", "VueJS", "MATLAB", "FPGA", "UML"],
-    tools: ["Spring Boot", "Kafka", "Kubernetes", "Docker", "AWS", "Claude Code", "Jenkins", "Maven", "Git", "Jest", "Robot Framework", "JIRA", "PostgreSQL / pgAdmin4", "Linux", "IntelliJ", "VS Code", "SOLIDWORKS", "Altium"]
+    tools: ["Spring Boot", "REST / OpenAPI", "Kafka", "Kubernetes", "Kustomize", "skaffold", "Docker", "Claude Code", "Jenkins", "GitHub Actions", "SonarQube", "Node.js / npm", "Nx", "Maven", "Git", "Jest", "Robot Framework", "Datadog", "JIRA", "PostgreSQL / pgAdmin4", "Linux", "IntelliJ", "VS Code", "SOLIDWORKS", "Altium"]
   },
 
   skills: [

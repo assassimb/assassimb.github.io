@@ -16,6 +16,15 @@ import { buildResumeDoc, DEFAULT_PRESET } from "../lib/condense.js";
 
 const DOT = " · ";
 
+/* Private contact details for the PDF you send to a recruiter. They come from
+   resume/.env.local, which is gitignored, so the CI build that publishes the
+   site never sees them and the public bundle keeps only "Assim B.". */
+const PRIVATE = {
+  name: import.meta.env.VITE_PRINT_NAME,
+  phone: import.meta.env.VITE_PRINT_PHONE,
+  linkedin: import.meta.env.VITE_PRINT_LINKEDIN
+};
+
 function Entry({ e }) {
   return (
     <div className={"pentry pentry-" + e.level}>
@@ -91,11 +100,13 @@ export default function PrintDoc({ lang, preset = DEFAULT_PRESET, resume }) {
     <article className="pdoc" lang={doc.lang} data-preset={doc.preset}>
       <header className="pdoc-head">
         <div className="pdoc-id">
-          <h1 className="pdoc-name">{h.name}</h1>
+          <h1 className="pdoc-name">{PRIVATE.name || h.name}</h1>
           <div className="pdoc-title">{h.title}</div>
         </div>
         <div className="pdoc-contact">
           <a href={"mailto:" + h.email}>{h.email}</a>
+          {PRIVATE.phone && <span>{PRIVATE.phone}</span>}
+          {PRIVATE.linkedin && <a href={"https://" + PRIVATE.linkedin}>{PRIVATE.linkedin}</a>}
           <span>{h.location}</span>
         </div>
       </header>

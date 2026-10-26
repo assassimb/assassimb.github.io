@@ -51,6 +51,25 @@ export const PRESETS = {
     dedupeThreshold: 0.45
   },
 
+  /* Two Letter pages. The recent roles carry most of the budget, because a
+     recruiter's keyword pass weighs recent experience highest. */
+  twopage: {
+    id: "twopage",
+    bullets: [10, 3, 4, 0, 0, 0, 0],
+    levels: ["full", "full", "full", "line", "line", "line", "line"],
+    stackCap: { full: 10, brief: 4, line: 0 },
+    projects: { max: 1, bullets: 2, level: "full", stackCap: 5 },
+    /* Skills right under the summary: a recruiter's keyword pass starts there. */
+    knowledgeFirst: true,
+    includeInterests: false,
+    includeSoftSkills: false,
+    includeProjects: true,
+    taglineMax: 320,
+    bulletMax: 270,
+    lineSummaryMax: 120,
+    dedupeThreshold: 0.45
+  },
+
   /* Kept as a working alternative: same pipeline, looser budget. Not wired to
      any UI control today; flip DEFAULT_PRESET or pass a preset to build(). */
   standard: {
@@ -69,7 +88,7 @@ export const PRESETS = {
   }
 };
 
-export const DEFAULT_PRESET = "onepage";
+export const DEFAULT_PRESET = "twopage";
 
 /* ---------- 3. text utilities ---------- */
 
@@ -231,7 +250,10 @@ function buildBullets(entry, lang, n, preset) {
 
   const pool = [
     ...pickList(entry.responsibilities, lang).map((t, i) => ({ t, origin: "resp", i })),
-    ...pickList(entry.impact, lang).map((t, i) => ({ t, origin: "impact", i: 1000 + i }))
+    /* `printImpact: false` keeps the outcomes out of the pool, for an entry
+       whose responsibilities already carry them. */
+    ...(entry.printImpact === false ? [] : pickList(entry.impact, lang))
+      .map((t, i) => ({ t, origin: "impact", i: 1000 + i }))
   ].map((c) => ({
     ...c,
     s: score(c.t, stackBags, c.origin) + (pinned(c.t) ? 100 : 0),
@@ -327,6 +349,22 @@ export function buildResumeDoc(RESUME, opts = {}) {
 
   const sections = [];
 
+  /* technical knowledge: comma-joined runs, never chips: chip markup parses
+     badly in ATS and wastes vertical space at print scale. `groups`, when
+     present, replaces the two flat lists with labelled runs. */
+  const k = RESUME.knowledge || {};
+  const groups = [];
+  if (k.groups?.length) {
+    for (const g of k.groups) groups.push({ label: pick(g.label, lang), items: g.items.map((it) => pick(it, lang)) });
+  } else {
+    if (k.languages?.length) groups.push({ label: pick(ui.languages, lang), items: k.languages });
+    if (k.tools?.length) groups.push({ label: pick(ui.tools, lang), items: k.tools });
+  }
+  const knowledge = groups.length
+    ? { id: "knowledge", title: pick(S.knowledge, lang), kind: "groups", groups }
+    : null;
+  if (knowledge && preset.knowledgeFirst) sections.push(knowledge);
+
   /* experience: budget decays with position */
   const experience = (RESUME.experience || []).map((e, i) => {
     const level = preset.levels[i] || "line";
@@ -343,7 +381,10 @@ export function buildResumeDoc(RESUME, opts = {}) {
     const cfg = preset.projects;
     const projects = (RESUME.university || [])
       .slice(0, cfg.max)
-      .map((e) => buildEntry(e, lang, cfg.level, cfg.bullets, cfg.stackCap, preset, header.location));
+      .map((e) => buildEntry(e, lang, cfg.level, cfg.bullets, cfg.stackCap, preset, header.location))
+      /* The section title already says these are projects; dropping the type
+         keeps the meta run short enough that the title never wraps. */
+      .map((e) => ({ ...e, meta: [e.period, e.location].filter(Boolean).join(" · ") }));
     if (projects.length) {
       sections.push({ id: "projects", title: pick(S.university, lang), kind: "entries", entries: projects });
     }
@@ -359,15 +400,7 @@ export function buildResumeDoc(RESUME, opts = {}) {
     sections.push({ id: "education", title: pick(S.education, lang), kind: "education", items: education });
   }
 
-  /* technical knowledge: comma-joined runs, never chips: chip markup parses
-     badly in ATS and wastes vertical space at print scale. */
-  const k = RESUME.knowledge || {};
-  const groups = [];
-  if (k.languages?.length) groups.push({ label: pick(ui.languages, lang), items: k.languages });
-  if (k.tools?.length) groups.push({ label: pick(ui.tools, lang), items: k.tools });
-  if (groups.length) {
-    sections.push({ id: "knowledge", title: pick(S.knowledge, lang), kind: "groups", groups });
-  }
+  if (knowledge && !preset.knowledgeFirst) sections.push(knowledge);
 
   /* soft skills and interests: off under the one-page budget */
   if (preset.includeSoftSkills && RESUME.skills?.length) {

@@ -55,6 +55,15 @@
 
 .pdoc a { color: inherit; text-decoration: none; }
 
+/* Two-page preset: the budget is pages, not lines, so trade the density the
+   one-page layout needed for reading comfort. */
+.pdoc[data-preset="twopage"] {
+  --pdoc-base: 9.3pt;
+  --pdoc-lh:   1.34;
+}
+.pdoc[data-preset="twopage"] .psec { margin-top: 4.6mm; }
+.pdoc[data-preset="twopage"] .pentry { margin-bottom: 3.2mm; }
+
 /* ---- masthead ---- */
 
 .pdoc-head {
@@ -217,6 +226,7 @@
   margin-right: 2mm;
 }
 .pgroup-label::after { content: ":"; }
+.pdoc[lang="fr"] .pgroup-label::after { content: "\00a0:"; }  /* French spacing */
 .pgroup-items { color: var(--pdoc-ink-2); }
 
 /* ---- optional sections (standard preset only) ---- */
@@ -263,6 +273,10 @@ body[data-resume-preview="on"] .pdoc {
     display: block;
     padding: 11mm 12mm;         /* replaces @page margin, see @page note */
     box-sizing: border-box;
+    /* Repeat the padding on every page fragment, or page 2 starts flush
+       against the paper edge. */
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
 
   /* Widow and orphan control. A lone trailing line of a bullet on the next
