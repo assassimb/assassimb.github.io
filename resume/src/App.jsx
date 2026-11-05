@@ -100,7 +100,7 @@ function Hero({ lang }) {
           </div>
         </div>
         <div className="hero-right">
-          <Avatar text={p.initials} size={132} src="/me.png" alt={p.name} />
+          <Avatar text={p.initials} size={132} src="/me.webp" alt={p.name} />
         </div>
       </div>
     </section>

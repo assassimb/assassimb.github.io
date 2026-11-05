@@ -17,7 +17,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
+<!-- Only the icons the CV uses (keep sorted): the full icon font is 324 KB, this subset about 3 KB. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back,arrow_forward,bolt,business,calendar_month,close,download,groups,lightbulb,location_on,menu_book,piano,sports_esports,target&display=block" />
+<link rel="preload" href="/vendor/swarm-rebuild.js" as="script" />
 </head>
 <body data-grid="on" data-glow="on">
   <!-- Hides the CV until the swarm's own blank layer is up, so the finished page never shows before the build. -->
@@ -28,9 +30,15 @@
     const cover = document.getElementById("swarm-cover");
     setTimeout(() => cover.remove(), 10000);
 
-    /* Plays as an intro, not a tool: no toolbar, 3× speeding up to 10× as the page fills in, the whole page unlocked without scrolling, and the cursors walk off when done. */
+    /* Plays as an intro, not a tool: no toolbar, 3× speeding up to 10× as the page fills in, the whole page unlocked without scrolling, and each cursor vanishes once it has nothing left to do. */
     function tune(app) {
       const E = app.engine;
+      /* The CV has no lazy-loaded content, so the swarm's scroll pass that wakes it up only costs time. */
+      app.scan = async () => {};
+      /* The rulers are rebuilt from a string every frame; only touch the DOM when it changed. */
+      const rulers = app.view.rulers, html = Object.getOwnPropertyDescriptor(Element.prototype, "innerHTML");
+      let lastRulers = null;
+      Object.defineProperty(rulers, "innerHTML", { get: () => html.get.call(rulers), set: (v) => { if (v !== lastRulers) html.set.call(rulers, (lastRulers = v)); } });
       app.view.bg.style.transition = "none";
       app.view.hud.style.display = "none";
       app.speedIx = app.speeds.indexOf(3);
@@ -61,33 +69,49 @@
         E.releasing = true;
         E.cursors.length = 0;
       };
+      /* Once captured, the real CV sits fully under the swarm's opaque layer but would still be painted and composited:
+         hide it until the swarm fades out. */
+      const page = document.getElementById("root");
+      const showPage = () => (page.style.visibility = "");
       const tick = () => {
-        if (window.__swarmRebuild.app !== app) return;
+        if (window.__swarmRebuild.app !== app) return showPage();
         /* The swarm only builds down to where the reader has scrolled. */
         if (E.started) {
           E.frontier = Infinity;
           E.speed = 3 + 7 * (E.doneCount / Math.max(1, E.tasks.length));
+          page.style.visibility = "hidden";
         }
         if (cover.isConnected && app.view.bg.classList.contains("on")) requestAnimationFrame(() => cover.remove());
-        if (app.leaving && !E.cursors.length) return window.__swarmRebuild.stop(true);
+        if (app.leaving && !E.cursors.length) {
+          showPage();
+          return window.__swarmRebuild.stop(true);
+        }
         requestAnimationFrame(tick);
       };
       tick();
     }
 
-    /* The swarm snapshots the DOM once at start, so it must wait for React, fonts (icon ligatures) and the photo. */
-    addEventListener("load", async () => {
-      const until = (ok) => new Promise((r) => { const t = () => (ok() ? r() : setTimeout(t, 50)); t(); });
-      await until(() => document.querySelector("#root > *"));
-      await document.fonts.ready;
-      await Promise.all([...document.images].map((img) => img.decode().catch(() => {})));
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    /* The swarm snapshots the DOM once at start, so it waits for React, the fonts (icon ligatures) and the photo, but not for
+       the whole page load (analytics can hold that for seconds on a phone). Past the deadline, the intro is skipped rather than
+       shown late over a CV the reader has already seen. */
+    (async () => {
+      const deadline = 6000;
+      const before = (p) => Promise.race([p.then(() => true, () => true), new Promise((r) => setTimeout(() => r(false), Math.max(0, deadline - performance.now())))]);
+      const until = (ok) => new Promise((r) => { const t = () => (ok() ? r() : setTimeout(t, 30)); t(); });
+      const frames = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const ready =
+        (await before(until(() => document.querySelector("#root > *")))) &&
+        (await before(frames())) &&
+        (await before(document.fonts.ready)) &&
+        (await before(Promise.all([...document.images].map((img) => img.decode().catch(() => {}))))) &&
+        (await before(frames()));
+      if (!ready) return cover.remove();
       const s = document.createElement("script");
       s.src = "/vendor/swarm-rebuild.js";
       s.onload = () => tune(window.__swarmRebuild.app);
       s.onerror = () => cover.remove();
       document.body.appendChild(s);
-    });
+    })();
   </script>
 </body>
 </html>
