@@ -20,7 +20,73 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
 </head>
 <body data-grid="on" data-glow="on">
+  <!-- Hides the CV until the swarm's own blank layer is up, so the finished page never shows before the build. -->
+  <div id="swarm-cover" style="position:fixed;inset:0;z-index:2147483647;background:#080b12"></div>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
+  <script>
+    const cover = document.getElementById("swarm-cover");
+    const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (calm) cover.remove();
+    else setTimeout(() => cover.remove(), 10000);
+
+    /* Plays as an intro, not a tool: no toolbar, 3×, the whole page unlocked without scrolling, and the cursors walk off when done. */
+    function tune(app) {
+      const E = app.engine;
+      app.view.bg.style.transition = "none";
+      app.view.hud.style.display = "none";
+      app.speedIx = app.speeds.indexOf(3);
+      E.speed = 3;
+      /* A cursor with nothing to pick up would wander, or circle the mouse near the end: it vanishes instead.
+         Before the build starts, the intro orbit runs as usual. */
+      const idle = E.idle.bind(E), orbit = E.follow.bind(E);
+      const vanish = (c) => {
+        const i = E.cursors.indexOf(c);
+        if (i !== -1) E.cursors.splice(i, 1);
+        if (c.worked) E.retired++;
+      };
+      E.idle = (c) => {
+        if (!E.started) return idle(c);
+        c.leaving = true;
+        return (function* () {})();
+      };
+      E.follow = (dt, list, target, scale) => {
+        if (!E.started || E.flocking || target) return orbit(dt, list, target, scale);
+        list.forEach(vanish);
+        return false;
+      };
+      /* Runs inside the frame that finishes the build, before the swarm starts its mouse-circling finale. */
+      const done = E.onComplete;
+      E.onComplete = () => {
+        done();
+        app.leaving = true;
+        E.releasing = true;
+        E.cursors.length = 0;
+      };
+      const tick = () => {
+        if (window.__swarmRebuild.app !== app) return;
+        /* The swarm only builds down to where the reader has scrolled. */
+        if (E.started) E.frontier = Infinity;
+        if (cover.isConnected && app.view.bg.classList.contains("on")) requestAnimationFrame(() => cover.remove());
+        if (app.leaving && !E.cursors.length) return window.__swarmRebuild.stop(true);
+        requestAnimationFrame(tick);
+      };
+      tick();
+    }
+
+    /* The swarm snapshots the DOM once at start, so it must wait for React, fonts (icon ligatures) and the photo. */
+    if (!calm) addEventListener("load", async () => {
+      const until = (ok) => new Promise((r) => { const t = () => (ok() ? r() : setTimeout(t, 50)); t(); });
+      await until(() => document.querySelector("#root > *"));
+      await document.fonts.ready;
+      await Promise.all([...document.images].map((img) => img.decode().catch(() => {})));
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const s = document.createElement("script");
+      s.src = "/vendor/swarm-rebuild.js";
+      s.onload = () => tune(window.__swarmRebuild.app);
+      s.onerror = () => cover.remove();
+      document.body.appendChild(s);
+    });
+  </script>
 </body>
 </html>
