@@ -28,7 +28,7 @@
     const cover = document.getElementById("swarm-cover");
     setTimeout(() => cover.remove(), 10000);
 
-    /* Plays as an intro, not a tool: no toolbar, 3×, the whole page unlocked without scrolling, and the cursors walk off when done. */
+    /* Plays as an intro, not a tool: no toolbar, 3× speeding up to 10× as the page fills in, the whole page unlocked without scrolling, and the cursors walk off when done. */
     function tune(app) {
       const E = app.engine;
       app.view.bg.style.transition = "none";
@@ -64,7 +64,10 @@
       const tick = () => {
         if (window.__swarmRebuild.app !== app) return;
         /* The swarm only builds down to where the reader has scrolled. */
-        if (E.started) E.frontier = Infinity;
+        if (E.started) {
+          E.frontier = Infinity;
+          E.speed = 3 + 7 * (E.doneCount / Math.max(1, E.tasks.length));
+        }
         if (cover.isConnected && app.view.bg.classList.contains("on")) requestAnimationFrame(() => cover.remove());
         if (app.leaving && !E.cursors.length) return window.__swarmRebuild.stop(true);
         requestAnimationFrame(tick);
