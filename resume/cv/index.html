@@ -26,9 +26,7 @@
   <script type="module" src="/src/main.jsx"></script>
   <script>
     const cover = document.getElementById("swarm-cover");
-    const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (calm) cover.remove();
-    else setTimeout(() => cover.remove(), 10000);
+    setTimeout(() => cover.remove(), 10000);
 
     /* Plays as an intro, not a tool: no toolbar, 3×, the whole page unlocked without scrolling, and the cursors walk off when done. */
     function tune(app) {
@@ -75,7 +73,7 @@
     }
 
     /* The swarm snapshots the DOM once at start, so it must wait for React, fonts (icon ligatures) and the photo. */
-    if (!calm) addEventListener("load", async () => {
+    addEventListener("load", async () => {
       const until = (ok) => new Promise((r) => { const t = () => (ok() ? r() : setTimeout(t, 50)); t(); });
       await until(() => document.querySelector("#root > *"));
       await document.fonts.ready;
